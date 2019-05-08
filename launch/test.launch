@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<launch>
+    <!--arg name="input_topic" default="/stereo_camera/right/pointcloud"/-->
+    <arg name="input_topic" default="/depth_camera/pointcloud"/>
+	<node pkg="jacobs_octomap_server" type="jacobs_octomap_server_node" name="octomap_server" output="screen">
+        
+        <!-- data source to integrate (PointCloud2) -->
+        <remap from="cloud_in" to="$(arg input_topic)" />
+		<param name="resolution" value="0.05" />
+		<!-- fixed map frame (set to 'map' if SLAM or localization running!) -->
+		<param name="frame_id" type="string" value="/map" />
+		<!-- maximum range to integrate (speedup!) -->
+		<param name="sensor_model/max_range" value="2.0" /> <!--(float, default: -1 (unlimited)) -->
+
+		<!-- sensor probability characteristic -->
+		<!--sensor_model/[hit|miss] (float, default: 0.7 / 0.4) Probabilities for hits and misses in the sensor model when dynamically building a map -->
+		<param name="sensor_model/hit" value="0.61" /> <!-- must be >0.5 -->
+		<param name="sensor_model/miss" value="0.1" /> <!-- must be <0.5 -->
+
+		<!-- sensor_model/[min|max] (float, default: 0.12 / 0.97) Minimum and maximum probability for clamping when dynamically building a map-->
+		<param name="sensor_model/min" value="0.1" /> 
+		<param name="sensor_model/max" value="0.9" />
+
+		<!-- threshold specifying at what probability a given voxel is considered to be occupied, default 0.5 -->
+		<param name="sensor_model/occupancy_threshold" value="0.5" /> 
+
+        <!-- UNTIL HERE ITS OF INTERST -->
+		<!-- negative feedback: for lightrays corresponding to the invalid values in the disparity image empty voxels are added to clear the space-->
+		<param name="nf_negative_feedback" value="false" /> <!-- if 'false' the rest may be ignored, projection_model/ params must be identical as in the intrinsic matrix -->
+		<param name="projection_model/nf_cx" value="344" /> <!-- x coordinate of the center of the image -->
+		<param name="projection_model/nf_cy" value="258" /> <!-- y coordinate of the center of the image -->
+		<param name="projection_model/nf_focal_length" value="580" /> <!-- focal length -->
+		<param name="projection_model/nf_min_range" value="1" /> <!-- min distance along the ray where the negative feedback voxels are generated -->
+		<param name="projection_model/nf_max_range" value="2" /> <!-- max distance along the ray where the negative feedback voxels are generated -->
+
+		<param name="latch" value="true" />
+		
+		
+		<remap from="octomap_occupied_centers_coarse" to="/rov/voxel_low" /> <!-- dexrov_msgs::VoxelArray , topic with low resolution voxels, updates being sent to MCC. these voxels are without color-->
+		<remap from="octomap_free_centers_coarse" to="/rov/voxel_free_low" /> <!-- dexrov_msgs::VoxelArray  samea s above, only these are voxels that got unoccupied-->
+		<remap from="octomap_occupied_centers_fine" to="/rov/voxel_high" /> <!-- dexrov_msgs::ColoredVoxelArray, high resolution voxels with colour, being sent only when bounding box is specified for voxels being within this bounding box-->
+		<remap from="octomap_free_centers_fine" to="/rov/voxel_free_high" /> <!-- dexrov_msgs::VoxelArray , same as above anly for unoccupied space-->
+		<remap from="octomap_full" to="/rov/octomap" /> <!-- octomap_msgs::Octomap , THIS IS THE DEFAULT OCTOMAP TOPIC, preserves octomap structure-->
+
+		<remap from="in_bbox_topic" to="/mcc/pointcloudRequest" /> <!-- dexrov_msgs::AABB, request for high resolution updates in a given bounding box, contains bounding box and desired resolution. octomap will publish with closest possible resolution -->
+		<remap from="octomap_request_topic" to="/mcc/octomapRequest" /> <!-- dexrov_msgs::OctomapRequest, request for sending a full octomap -->
+
+		<param name="fine_res_level" value="16" /> <!-- 1-16, where 16 is maximum resolution, as in "resolution" parameter and every level down is *2", fine resolution by default will not be used unless a bounding box is specified -->
+		<param name="coarse_res_level" value="14" /> <!-- level of resoution of the low_res voxels -->
+	
+	</node>
+    <node pkg="abrish" type="test_node" name="test_node" output="screen">
+    </node>
+</launch>
+
