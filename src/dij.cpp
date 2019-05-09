@@ -19,7 +19,7 @@ int graph[H*W][H*W];
 
 bool isValid(int row, int col)
 {
-    // Returns true if row number and column numbe is in range
+    // Returns true if row number and column number is in range
     return (row >= 0) && (row < H) &&
            (col >= 0) && (col < W);
 }
@@ -27,18 +27,21 @@ bool isValid(int row, int col)
 void checkNeighbours(int row, int col){
     int rneigh,cneigh,i,j;
     i = (row*H)+col;
-    cneigh = col;
-    rneigh = row;
     if (isValid(row-1,col) == true){
-        rneigh -= 1;
+        rneigh = row-1;
+        cneigh = col;
         j = (rneigh*H)+cneigh;
-        if(map[row-1][col] == 100 ){
+        if(map[row-1][col] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
             graph[j][i] = 100;
         }
-        else if(map[row-1][col] == -1 ){
+        else if(map[row-1][col] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
             graph[j][i] = 50;
+        }
+        else if(map[row-1][col] == 0 || map[row][col] == 0){
+            graph[i][j] = 1;
+            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
@@ -46,15 +49,20 @@ void checkNeighbours(int row, int col){
         }
     }
     if (isValid(row+1,col) == true){
-        rneigh += 1;
+        rneigh = row+1;
+        cneigh = col;
         j = (rneigh*H)+cneigh;
-        if(map[row+1][col] == 100 ){
+        if(map[row+1][col] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
             graph[j][i] = 100;
         }
-        else if(map[row+1][col] == -1 ){
+        else if(map[row+1][col] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
             graph[j][i] = 50;
+        }
+        else if(map[row+1][col] == 0){
+            graph[i][j] = 1;
+            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
@@ -62,15 +70,20 @@ void checkNeighbours(int row, int col){
         }
     }
     if (isValid(row,col+1) == true){
-        cneigh += 1; 
+        cneigh = col+1; 
+        rneigh = row;
         j = (rneigh*H)+cneigh;
-        if(map[row][col+1] == 100 ){
+        if(map[row][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
             graph[j][i] = 100;
         }
-        else if(map[row][col+1] == -1 ){
+        else if(map[row][col+1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
             graph[j][i] = 50;
+        }
+        else if(map[row][col+1] == 0){
+            graph[i][j] = 1;
+            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
@@ -78,15 +91,20 @@ void checkNeighbours(int row, int col){
         }
     }
     if (isValid(row,col-1) == true){
-        cneigh -= 1; 
+        cneigh = col-1; 
+        rneigh = row;
         j = (rneigh*H)+cneigh;
-        if(map[row][col-1] == 100 ){
+        if(map[row][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
             graph[j][i] = 100;
         }
-        else if(map[row][col-1] == -1 ){
+        else if(map[row][col-1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
             graph[j][i] = 50;
+        }
+        else if(map[row][col-1] == 0){
+            graph[i][j] = 1;
+            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
@@ -94,16 +112,20 @@ void checkNeighbours(int row, int col){
         }
     }
     if (isValid(row-1,col+1) == true){
-        rneigh -= 1;
-        cneigh += 1; 
+        rneigh = row-1;
+        cneigh = col+1; 
         j = (rneigh*H)+cneigh;
-        if(map[row-1][col+1] == 100 ){
+        if(map[row-1][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
             graph[j][i] = 100;
         }
-        else if(map[row-1][col+1] == -1 ){
+        else if(map[row-1][col+1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
             graph[j][i] = 50;
+        }
+        else if(map[row-1][col+1] == 0){
+            graph[i][j] = 1;
+            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
@@ -111,16 +133,20 @@ void checkNeighbours(int row, int col){
         }
     }
     if (isValid(row-1,col-1) == true){
-        rneigh -= 1;
-        cneigh -= 1; 
+        rneigh = row-1;
+        cneigh = col-1; 
         j = (rneigh*H)+cneigh;
-        if(map[row-1][col-1] == 100 ){
+        if(map[row-1][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
             graph[j][i] = 100;
         }
-        else if(map[row-1][col-1] == -1){
+        else if(map[row-1][col-1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
             graph[j][i] = 50;
+        }
+        else if(map[row-1][col-1] == 0){
+            graph[i][j] = 1;
+            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
@@ -128,16 +154,20 @@ void checkNeighbours(int row, int col){
         }
     }
     if (isValid(row+1,col+1) == true){
-        rneigh += 1;
-        cneigh += 1; 
+        rneigh = row+1;
+        cneigh = col+1; 
         j = (rneigh*H)+cneigh;
-        if(map[row+1][col+1] == 100){
+        if(map[row+1][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
             graph[j][i] = 100;
         }
-        else if(map[row+1][col+1] == -1 ){
+        else if(map[row+1][col+1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
             graph[j][i] = 50;
+        }
+        else if(map[row+1][col+1] == 0){
+            graph[i][j] = 1;
+            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
@@ -145,22 +175,29 @@ void checkNeighbours(int row, int col){
         }
     }
     if (isValid(row+1,col-1) == true){
-        rneigh += 1;
-        cneigh -= 1; 
+        rneigh = row+1;
+        cneigh = col-1; 
         j = (rneigh*H)+cneigh;
-        if(map[row+1][col-1] == 100 ){
+        if(map[row+1][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
             graph[j][i] = 100;
         }
-        else if(map[row+1][col-1] == -1 ){
+        else if(map[row+1][col-1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
             graph[j][i] = 50;
+        }
+        else if(map[row+1][col-1] == 0){
+            graph[i][j] = 1;
+            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
             graph[j][i] = 0;
         }
     }
+    cout << row << col << " ";
+    cout << rneigh << cneigh << " ";
+    cout << graph[i][j] << endl;
 }
 
 
@@ -172,9 +209,11 @@ int minDistance(int dist[], bool sptSet[])
     int min = INT_MAX, min_index; 
   
     for (int v = 0; v < H*W; v++) 
-        if (sptSet[v] == false && 
-                   dist[v] <= min) 
-            min = dist[v], min_index = v; 
+        if (sptSet[v] == false && dist[v] <= min){
+            min = dist[v];
+            min_index = v;
+        }
+             
   
     return min_index; 
 } 
@@ -191,14 +230,15 @@ void printPath(int parent[], int x)
 } 
   
 // A utility function to print the constructed distance array 
-void printSolution(int dist[], int n, int parent[]) 
+void printSolution(int dist[], int n) 
 { 
     int src = 0; 
     printf("Vertex\t Distance\tPath"); 
     for (int i = 1; i < H*W; i++) 
     { 
-        printf("\n%d -> %d \t\t %d\t\t%d", src, i, dist[i], src); 
-        printPath(parent, i); 
+        printf("%d \t %d\n", i, dist[i]); 
+        //printf("\n%d -> %d \t\t %d\t\t%d", src, i, dist[i], src); 
+        //printPath(parent, i); 
     } 
 } 
 
@@ -257,15 +297,15 @@ void dijkstra(int graph[H*W][H*W], int src)
             // total weight of path from src to v through u is smaller 
             // than current value of dist[v] 
             if (!sptSet[v] && graph[u][v] && 
-                dist[u] + graph[u][v] < dist[v]) 
+                dist[u] != INT_MAX && dist[u]+ graph[u][v] < dist[v]) 
             { 
-                parent[v] = u; 
+                //parent[v] = u; 
                 dist[v] = dist[u] + graph[u][v]; 
             }  
     } 
-  
+
     // print the constructed distance array 
-    printSolution(dist, H*W, parent); 
+    printSolution(dist, H*W); 
 } 
   
 // Driver Code 
@@ -273,7 +313,7 @@ int main()
 { 
     std::ifstream file("no.txt");
 
-    for(int row = 0; row < H; ++row)
+    for(int row = 0; row <H; ++row)
     {
         std::string line;
         std::getline(file, line);
@@ -282,7 +322,7 @@ int main()
 
         std::stringstream iss(line);
 
-        for (int col = 0; col < W; ++col)
+        for (int col = 0; col <W; ++col)
         {
             std::string val;
             std::getline(iss, val, ',');
@@ -297,6 +337,7 @@ int main()
         for(int j = 0; j< W; j++){
             checkNeighbours(i,j);
         }
+       
     }
     printGraph();
     cout << endl;
