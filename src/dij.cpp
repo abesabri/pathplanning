@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 // Number of vertices in the graph 
@@ -15,7 +16,9 @@ using namespace std;
 //Arrays to map 1D into 2D
 int map[H][W];
 int graph[H*W][H*W];
-  
+vector<vector<int> >v1;
+vector<vector<pair<int,int> > >v2;  
+
 
 bool isValid(int row, int col)
 {
@@ -47,6 +50,7 @@ void checkNeighbours(int row, int col){
             graph[i][j] = 0;
             graph[j][i] = 0;
         }
+        
     }
     if (isValid(row+1,col) == true){
         rneigh = row+1;
@@ -68,6 +72,7 @@ void checkNeighbours(int row, int col){
             graph[i][j] = 0;
             graph[j][i] = 0;
         }
+        
     }
     if (isValid(row,col+1) == true){
         cneigh = col+1; 
@@ -195,53 +200,45 @@ void checkNeighbours(int row, int col){
             graph[j][i] = 0;
         }
     }
-    cout << row << col << " ";
-    cout << rneigh << cneigh << " ";
-    cout << graph[i][j] << endl;
 }
 
 
 // A utility function to find the vertex with minimum distance value, from the set of vertices not yet included in shortest path tree 
 int minDistance(int dist[], bool sptSet[]) 
 { 
-      
     // Initialize min value 
     int min = INT_MAX, min_index; 
-  
     for (int v = 0; v < H*W; v++) 
         if (sptSet[v] == false && dist[v] <= min){
             min = dist[v];
             min_index = v;
         }
-             
-  
     return min_index; 
 } 
   
 // Function to print shortest path from source to int 
-void printPath(int parent[], int x) 
+void printPath(int parent[], int x, vector<int> &v) 
 { 
     if (parent[x] == - 1) 
         return; 
-  
-    printPath(parent, parent[x]); 
-  
+    printPath(parent, parent[x],v); 
     cout << "->" << x;
+    v.push_back(x);
 } 
   
 // A utility function to print the constructed distance array 
-void printSolution(int dist[], int n) 
+void printSolution(int dist[], int n, int parent[]) 
 { 
     int src = 0; 
-    printf("Vertex\t Distance\tPath"); 
+    printf("Vertex\t\t Distance\tPath\n");
     for (int i = 1; i < H*W; i++) 
     { 
-        printf("%d \t %d\n", i, dist[i]); 
-        //printf("\n%d -> %d \t\t %d\t\t%d", src, i, dist[i], src); 
-        //printPath(parent, i); 
+        vector<int> v;
+        printf("\n%d -> %d \t\t %d\t\t%d", src, i, dist[i], src); 
+        printPath(parent, i, v);
+        v1.push_back(v);
     } 
 } 
-
 
 void printGraph(){
     for(int i =0; i < H*W; i++){
@@ -251,6 +248,19 @@ void printGraph(){
         cout << endl;
     }
 
+}
+
+void Path2D(vector<vector<pair<int,int> > >&v) {
+    int x,y;
+    for(int i=0; i<v1.size();i++){
+        vector<pair<int, int> > tmp;
+        for(int j=0; j<v1[i].size();j++){
+            x = (v1[i][j])%W;
+            y = (v1[i][j])/W;
+            tmp.push_back(make_pair(y,x));
+        }
+        v.push_back(tmp);
+    }
 }
   
 // Funtion that implements Dijkstra's single source shortest path algorithm for a graph represented using adjacency matrix representation 
@@ -299,13 +309,13 @@ void dijkstra(int graph[H*W][H*W], int src)
             if (!sptSet[v] && graph[u][v] && 
                 dist[u] != INT_MAX && dist[u]+ graph[u][v] < dist[v]) 
             { 
-                //parent[v] = u; 
+                parent[v] = u; 
                 dist[v] = dist[u] + graph[u][v]; 
             }  
     } 
 
     // print the constructed distance array 
-    printSolution(dist, H*W); 
+    printSolution(dist, H*W, parent); 
 } 
   
 // Driver Code 
@@ -336,13 +346,24 @@ int main()
     for(int i = 0; i < H; i++){
         for(int j = 0; j< W; j++){
             checkNeighbours(i,j);
-        }
-       
+        }   
     }
+
     printGraph();
     cout << endl;
     dijkstra(graph, 0); 
     cout << endl;
-    
+
+   
+    printf("\n\n");
+
+    Path2D(v2);
+    for(int i =0; i<v2.size();i++){
+        for(int j=0; j<v2[i].size();j++){
+            cout << v2[i][j].first << " " << v2[i][j].second << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
     return 0; 
 } 
