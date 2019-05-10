@@ -20,7 +20,9 @@ double resolution = 0.0500000007451;
 int map[H][W];
 int graph[H*W][H*W];
 vector<vector<int> >v1;
-vector<vector<pair<double,double> > >v2;  
+vector<vector<pair<double,double> > >v2; 
+
+//int H,W;
 
 
 bool isValid(int row, int col)
@@ -326,28 +328,36 @@ void dijkstra(int graph[H*W][H*W], int src)
 // Driver Code 
 int main() 
 { 
-    std::ifstream file("no.txt");
+    std::ifstream file("num.txt");
+    int mapt[366][362];
 
-    for(int row = 0; row <H; ++row)
-    {
-        std::string line;
-        std::getline(file, line);
-        if ( !file.good() )
-            break;
+    //COMMENT: map array and others that depend on H and W should be initialize here 
 
-        std::stringstream iss(line);
+    std::string line;
+    std::getline(file, line);
+    if ( !file.good() )
+        return -1;
 
+    std::stringstream iss(line);
+
+    for(int row = 0; row <H; ++row){
         for (int col = 0; col <W; ++col)
         {
+            
             std::string val;
             std::getline(iss, val, ',');
             if ( !iss.good() )
                 break;
 
             std::stringstream convertor(val);
-            convertor >> map[row][col];
+            //convertor >> map[row][col];
+            convertor >> mapt[row][col];
+            
         }
     }
+    cout << "Finish reading file" << endl;
+    
+    /*
     for(int i = 0; i < H; i++){
         for(int j = 0; j< W; j++){
             checkNeighbours(i,j);
@@ -368,6 +378,6 @@ int main()
         }
         cout << endl;
     }
-    cout << endl;
+    cout << endl;*/
     return 0; 
 } 
