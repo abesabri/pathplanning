@@ -167,12 +167,9 @@ void aStar(int grid[][W], Pair src, Pair dest)
     cellDetails[i][j].parent_j = j;
 
     /* 
-     Create an open list having information as- 
-     <f, <i, j>> 
-     where f = g + h, 
-     and i, j are the row and column index of that cell 
-     Note that 0 <= i <= ROW-1 & 0 <= j <= COL-1 
-     This open list is implenented as a set of pair of pair.*/
+     Create an open list having information as <f, <i, j>> 
+     where f = g + h, and i, j are the row and column index of that cell 
+     Note that 0 <= i <= ROW-1 & 0 <= j <= COL-1. This open list is implenented as a set of pair of pair.*/
     set<pPair> openList;
 
     // Put the starting cell on the open list and set its
@@ -203,8 +200,7 @@ void aStar(int grid[][W], Pair src, Pair dest)
         // Only process this cell if this is a valid one
         if (isValid(i - 1, j) == true)
         {
-            // If the destination cell is the same as the
-            // current successor
+            // If the destination cell is the same as the current successor
             if (isDestination(i - 1, j, dest) == true)
             {
                 // Set the Parent of the destination cell

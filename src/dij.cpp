@@ -12,8 +12,8 @@
 
 using namespace std;
 // Number of vertices in the graph 
-#define H 3 //366 
-#define W 3 //362
+#define H 366 //366 
+#define W 362 //362
 //resolution value
 double resolution = 0.0500000007451;
 //Arrays to map 1D into 2D
@@ -23,6 +23,7 @@ vector<vector<int> >v1;
 vector<vector<pair<double,double> > >v2; 
 
 //int H,W;
+
 
 
 bool isValid(int row, int col)
@@ -234,6 +235,7 @@ void printPath(int parent[], int x, vector<int> &v)
 // A utility function to print the constructed distance array 
 void printSolution(int dist[], int n, int parent[]) 
 { 
+    vector<vector<int> >v1;
     int src = 0; 
     printf("Vertex\t\t Distance\tPath\n");
     for (int i = 1; i < H*W; i++) 
@@ -255,7 +257,7 @@ void printGraph(){
 
 }
 
-void Path2D(vector<vector<pair<double,double> > >&v) {
+void Path2D(vector<vector<int> >&v1,vector<vector<pair<double,double> > >&v) {
     double x,y;
     for(int i=0; i<v1.size();i++){
         vector<pair<double,double> > tmp;
@@ -333,6 +335,7 @@ int main()
 
     //COMMENT: map array and others that depend on H and W should be initialize here 
 
+
     std::string line;
     std::getline(file, line);
     if ( !file.good() )
@@ -371,7 +374,7 @@ int main()
 
     printf("\n\n");
 
-    Path2D(v2);
+    Path2D(v1,v2);
     for(int i =0; i<v2.size();i++){
         for(int j=0; j<v2[i].size();j++){
             cout << fixed << setprecision(20)<< v2[i][j].first << " " <<fixed << setprecision(20)<< v2[i][j].second << " ";
