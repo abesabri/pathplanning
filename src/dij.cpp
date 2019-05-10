@@ -8,16 +8,19 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <iomanip>
 
 using namespace std;
 // Number of vertices in the graph 
 #define H 3 //366 
 #define W 3 //362
+//resolution value
+double resolution = 0.0500000007451;
 //Arrays to map 1D into 2D
 int map[H][W];
 int graph[H*W][H*W];
 vector<vector<int> >v1;
-vector<vector<pair<int,int> > >v2;  
+vector<vector<pair<double,double> > >v2;  
 
 
 bool isValid(int row, int col)
@@ -250,13 +253,15 @@ void printGraph(){
 
 }
 
-void Path2D(vector<vector<pair<int,int> > >&v) {
-    int x,y;
+void Path2D(vector<vector<pair<double,double> > >&v) {
+    double x,y;
     for(int i=0; i<v1.size();i++){
-        vector<pair<int, int> > tmp;
+        vector<pair<double,double> > tmp;
         for(int j=0; j<v1[i].size();j++){
             x = (v1[i][j])%W;
             y = (v1[i][j])/W;
+            x = x*resolution;
+            y = y*resolution;
             tmp.push_back(make_pair(y,x));
         }
         v.push_back(tmp);
@@ -354,13 +359,12 @@ int main()
     dijkstra(graph, 0); 
     cout << endl;
 
-   
     printf("\n\n");
 
     Path2D(v2);
     for(int i =0; i<v2.size();i++){
         for(int j=0; j<v2[i].size();j++){
-            cout << v2[i][j].first << " " << v2[i][j].second << " ";
+            cout << fixed << setprecision(20)<< v2[i][j].first << " " <<fixed << setprecision(20)<< v2[i][j].second << " ";
         }
         cout << endl;
     }
