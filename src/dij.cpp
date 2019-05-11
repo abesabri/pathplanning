@@ -12,198 +12,169 @@
 
 using namespace std;
 // Number of vertices in the graph 
-#define H 366 //366 
-#define W 362 //362
+// #define H 366  
+// #define W 362 
 //resolution value
 double resolution = 0.0500000007451;
 //Arrays to map 1D into 2D
-int map[H][W];
-int graph[H*W][H*W];
+int H ,W;
+vector<vector<int> > map;
+vector<vector<int> > graph;
+//int *map[][];
+//int graph[H*W][H*W];
 vector<vector<int> >v1;
 vector<vector<pair<double,double> > >v2; 
 
-//int H,W;
 
-
-
-bool isValid(int row, int col)
+bool isValid(int row, int col, int row_max, int col_max)
 {
     // Returns true if row number and column number is in range
-    return (row >= 0) && (row < H) &&
-           (col >= 0) && (col < W);
+    return (row >= 0) && (row < row_max) &&
+           (col >= 0) && (col < col_max);
 }
 
 void checkNeighbours(int row, int col){
     int rneigh,cneigh,i,j;
+    int row_max = map.size();
+    int col_max = map[0].size();
     i = (row*H)+col;
-    if (isValid(row-1,col) == true){
+    if (isValid(row-1,col, row_max, col_max) == true){
         rneigh = row-1;
         cneigh = col;
         j = (rneigh*H)+cneigh;
         if(map[row-1][col] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
-            graph[j][i] = 100;
         }
         else if(map[row-1][col] == -1 || map[row][col] == -1){
-            graph[i][j] = 50;
-            graph[j][i] = 50;
+            graph[i][j] = 50; 
         }
         else if(map[row-1][col] == 0 || map[row][col] == 0){
             graph[i][j] = 1;
-            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
-            graph[j][i] = 0;
         }
         
     }
-    if (isValid(row+1,col) == true){
+    if (isValid(row+1,col, row_max, col_max) == true){
         rneigh = row+1;
         cneigh = col;
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*H)+cneigh;   
         if(map[row+1][col] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
-            graph[j][i] = 100;
         }
         else if(map[row+1][col] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
-            graph[j][i] = 50;
         }
         else if(map[row+1][col] == 0){
             graph[i][j] = 1;
-            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
-            graph[j][i] = 0;
         }
         
     }
-    if (isValid(row,col+1) == true){
+
+    if (isValid(row,col+1, row_max, col_max) == true){
         cneigh = col+1; 
         rneigh = row;
         j = (rneigh*H)+cneigh;
         if(map[row][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
-            graph[j][i] = 100;
         }
         else if(map[row][col+1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
-            graph[j][i] = 50;
         }
         else if(map[row][col+1] == 0){
             graph[i][j] = 1;
-            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
-            graph[j][i] = 0;
         }
     }
-    if (isValid(row,col-1) == true){
+    if (isValid(row,col-1, row_max, col_max) == true){
         cneigh = col-1; 
         rneigh = row;
         j = (rneigh*H)+cneigh;
         if(map[row][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
-            graph[j][i] = 100;
         }
         else if(map[row][col-1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
-            graph[j][i] = 50;
         }
         else if(map[row][col-1] == 0){
             graph[i][j] = 1;
-            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
-            graph[j][i] = 0;
         }
     }
-    if (isValid(row-1,col+1) == true){
+    if (isValid(row-1,col+1, row_max, col_max) == true){
         rneigh = row-1;
         cneigh = col+1; 
         j = (rneigh*H)+cneigh;
         if(map[row-1][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
-            graph[j][i] = 100;
         }
         else if(map[row-1][col+1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
-            graph[j][i] = 50;
         }
         else if(map[row-1][col+1] == 0){
             graph[i][j] = 1;
-            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
-            graph[j][i] = 0;
         }
     }
-    if (isValid(row-1,col-1) == true){
+    if (isValid(row-1,col-1, row_max, col_max) == true){
         rneigh = row-1;
         cneigh = col-1; 
         j = (rneigh*H)+cneigh;
         if(map[row-1][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
-            graph[j][i] = 100;
         }
         else if(map[row-1][col-1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
-            graph[j][i] = 50;
         }
         else if(map[row-1][col-1] == 0){
             graph[i][j] = 1;
-            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
-            graph[j][i] = 0;
         }
     }
-    if (isValid(row+1,col+1) == true){
+    if (isValid(row+1,col+1, row_max, col_max) == true){
         rneigh = row+1;
         cneigh = col+1; 
         j = (rneigh*H)+cneigh;
         if(map[row+1][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
-            graph[j][i] = 100;
         }
         else if(map[row+1][col+1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
-            graph[j][i] = 50;
         }
         else if(map[row+1][col+1] == 0){
             graph[i][j] = 1;
-            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
-            graph[j][i] = 0;
         }
     }
-    if (isValid(row+1,col-1) == true){
+    if (isValid(row+1,col-1, row_max, col_max) == true){
         rneigh = row+1;
         cneigh = col-1; 
         j = (rneigh*H)+cneigh;
         if(map[row+1][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
-            graph[j][i] = 100;
         }
         else if(map[row+1][col-1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
-            graph[j][i] = 50;
         }
         else if(map[row+1][col-1] == 0){
             graph[i][j] = 1;
-            graph[j][i] = 1;
         }
         else{
             graph[i][j] = 0;
-            graph[j][i] = 0;
         }
     }
 }
@@ -235,7 +206,6 @@ void printPath(int parent[], int x, vector<int> &v)
 // A utility function to print the constructed distance array 
 void printSolution(int dist[], int n, int parent[]) 
 { 
-    vector<vector<int> >v1;
     int src = 0; 
     printf("Vertex\t\t Distance\tPath\n");
     for (int i = 1; i < H*W; i++) 
@@ -244,12 +214,12 @@ void printSolution(int dist[], int n, int parent[])
         printf("\n%d -> %d \t\t %d\t\t%d", src, i, dist[i], src); 
         printPath(parent, i, v);
         v1.push_back(v);
-    } 
+    }
 } 
 
 void printGraph(){
-    for(int i =0; i < H*W; i++){
-        for(int j=0; j<H*W;j++){
+    for(int i =0; i < graph.size(); i++){
+        for(int j=0; j<graph[i].size();j++){
             cout << graph[i][j] << " \t";
         }
         cout << endl;
@@ -273,7 +243,7 @@ void Path2D(vector<vector<int> >&v1,vector<vector<pair<double,double> > >&v) {
 }
   
 // Funtion that implements Dijkstra's single source shortest path algorithm for a graph represented using adjacency matrix representation 
-void dijkstra(int graph[H*W][H*W], int src) 
+void dijkstra(vector<vector<int> > &graph, int src) 
 { 
       
     // The output array. dist[i] will hold the shortest distance from src to i 
@@ -322,7 +292,6 @@ void dijkstra(int graph[H*W][H*W], int src)
                 dist[v] = dist[u] + graph[u][v]; 
             }  
     } 
-
     // print the constructed distance array 
     printSolution(dist, H*W, parent); 
 } 
@@ -330,37 +299,34 @@ void dijkstra(int graph[H*W][H*W], int src)
 // Driver Code 
 int main() 
 { 
-    std::ifstream file("num.txt");
-    int mapt[366][362];
-
-    //COMMENT: map array and others that depend on H and W should be initialize here 
-
-
+    std::ifstream file("no.txt");
+    H = 3;
+    W = 3;
+    graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
+    //int mapt[H][W];
+    for(int row = 0; row < H; ++row){
     std::string line;
     std::getline(file, line);
-    if ( !file.good() )
+    if (!file.good())
         return -1;
 
     std::stringstream iss(line);
-
-    for(int row = 0; row <H; ++row){
-        for (int col = 0; col <W; ++col)
+    
+        vector<int> tmp;
+        for (int col = 0; col < W; ++col)
         {
-            
+            int temp_int;
             std::string val;
             std::getline(iss, val, ',');
             if ( !iss.good() )
                 break;
-
             std::stringstream convertor(val);
-            //convertor >> map[row][col];
-            convertor >> mapt[row][col];
-            
+            convertor >> temp_int;
+            tmp.push_back(temp_int);   
         }
+        map.push_back(tmp);
     }
-    cout << "Finish reading file" << endl;
-    
-    /*
+
     for(int i = 0; i < H; i++){
         for(int j = 0; j< W; j++){
             checkNeighbours(i,j);
@@ -375,12 +341,12 @@ int main()
     printf("\n\n");
 
     Path2D(v1,v2);
-    for(int i =0; i<v2.size();i++){
-        for(int j=0; j<v2[i].size();j++){
+    for(int i =0; i<v2.size(); i++){
+        for(int j=0; j<v2[i].size(); j++){
             cout << fixed << setprecision(20)<< v2[i][j].first << " " <<fixed << setprecision(20)<< v2[i][j].second << " ";
         }
         cout << endl;
     }
-    cout << endl;*/
+    cout << endl;
     return 0; 
 } 
