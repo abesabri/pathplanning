@@ -327,6 +327,10 @@ int main()
         map.push_back(tmp);
     }
 
+    //ARTURO: It is important that you always close files, for memory security reasons.
+    //Perhaps 95% of cases nothing will happen, but it can cause Segmentation Fault errors
+    file.close();
+
     for(int i = 0; i < H; i++){
         for(int j = 0; j< W; j++){
             checkNeighbours(i,j);
