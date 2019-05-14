@@ -304,7 +304,7 @@ int main()
     W = 3;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
     //int mapt[H][W];
-    for(int row = 0; row < H; ++row){
+    //for(int row = 0; row < H; ++row){
     std::string line;
     std::getline(file, line);
     if (!file.good())
@@ -312,7 +312,8 @@ int main()
 
     std::stringstream iss(line);
     
-        vector<int> tmp;
+    vector<int> tmp;
+    for(int row = 0; row < H; ++row){
         for (int col = 0; col < W; ++col)
         {
             int temp_int;
@@ -327,13 +328,30 @@ int main()
         map.push_back(tmp);
     }
 
+    //ARTURO: It is important that you always close files, for memory security reasons.
+    //Perhaps 95% of cases nothing will happen, but it can cause Segmentation Fault errors
+    file.close();
+
+    //ARTURO: I recommend to leave comments like this after each sstep of the process
+    //To make it easier to debug when something goes wrong
+    cout << endl;
+    cout << "+++ FILE WAS READ CORRECTLY +++" << endl;
+    cout << endl;
+
     for(int i = 0; i < H; i++){
         for(int j = 0; j< W; j++){
             checkNeighbours(i,j);
         }   
     }
 
+    cout << endl;
+    cout << "+++ PRINTING GRAPH +++" << endl;
+    cout << endl;
     printGraph();
+
+
+    cout << endl;
+    cout << "+++ COMPUTING DIJKSTRA SOLUTION +++" << endl;
     cout << endl;
     dijkstra(graph, 0); 
     cout << endl;
