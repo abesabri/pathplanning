@@ -13,8 +13,11 @@
 #include <iomanip>
 using namespace std;
 
-//#define W 3 //362
-//#define H 3 //366
+typedef pair<int,int> pathTemp;
+typedef pair<double,double> pathStore;
+
+//resolution value
+double resolution = 0.0500000007451;
 // Arrays to convert 1D data into 2D array
 int H,W;
 vector<vector<int> > map;
@@ -80,6 +83,7 @@ void tracePath(cell **cellDetails, Pair dest)
     printf("\nThe Path is ");
     int row = dest.first;
     int col = dest.second;
+    double x,y;
 
     stack<Pair> Path;
 
@@ -92,27 +96,51 @@ void tracePath(cell **cellDetails, Pair dest)
         col = temp_col;
     }
 
+  
+    vector<pathTemp> vecTemp;
+    vector<pathStore> vecPath;
+    
+
     Path.push(make_pair(row, col));
     while (!Path.empty())
     {
         pair<int, int> p = Path.top();
+
         Path.pop();
-        printf("-> (%d,%d) ", p.first, p.second);
+        vecTemp.push_back(make_pair(p.first,p.second));
+        cout << "-> (" << p.first << "," << p.second << ") ";
     }
+
+    cout << endl;
+
+    for(int i=0; i<vecTemp.size(); i++){
+
+        x = (vecTemp[i].first)%W;
+        y = (vecTemp[i].second)/W;
+        x = x*resolution;
+        y = y*resolution;
+        vecPath.push_back(make_pair(y,x));
+    }
+        cout << "\nPath in resolution" << endl;
+        for(int i =0; i<vecPath.size();i++){
+            cout << fixed << setprecision(20)<< vecPath[i].first << " " <<fixed << setprecision(20)<< vecPath[i].second << " ";
+        }
+        cout << endl;
 
     return;
 }
+
 
 //Utility function to map the data into the graph
 void checkNeighbours(int row, int col){
     int rneigh,cneigh,i,j;
     int row_max = map.size();
     int col_max = map[0].size();
-    i = (row*H)+col;
+    i = (row*W)+col;
     if (isValid(row-1,col, row_max, col_max) == true){
         rneigh = row-1;
         cneigh = col;
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*W)+cneigh;
         if(map[row-1][col] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
@@ -130,9 +158,10 @@ void checkNeighbours(int row, int col){
     if (isValid(row+1,col, row_max, col_max) == true){
         rneigh = row+1;
         cneigh = col;
-        j = (rneigh*H)+cneigh;   
+        j = (rneigh*W)+cneigh;   
         if(map[row+1][col] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
+     
         }
         else if(map[row+1][col] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
@@ -149,15 +178,15 @@ void checkNeighbours(int row, int col){
     if (isValid(row,col+1, row_max, col_max) == true){
         cneigh = col+1; 
         rneigh = row;
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*W)+cneigh;
         if(map[row][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
         else if(map[row][col+1] == -1 || map[row][col] == -1){
-            graph[i][j] = 50;
+            graph[i][j] = 50;   
         }
         else if(map[row][col+1] == 0){
-            graph[i][j] = 1;
+            graph[i][j] = 1;   
         }
         else{
             graph[i][j] = 0;
@@ -166,9 +195,11 @@ void checkNeighbours(int row, int col){
     if (isValid(row,col-1, row_max, col_max) == true){
         cneigh = col-1; 
         rneigh = row;
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*W)+cneigh;
+      
         if(map[row][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
+           
         }
         else if(map[row][col-1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
@@ -183,7 +214,8 @@ void checkNeighbours(int row, int col){
     if (isValid(row-1,col+1, row_max, col_max) == true){
         rneigh = row-1;
         cneigh = col+1; 
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*W)+cneigh;
+   
         if(map[row-1][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
@@ -197,18 +229,22 @@ void checkNeighbours(int row, int col){
             graph[i][j] = 0;
         }
     }
+     
     if (isValid(row-1,col-1, row_max, col_max) == true){
         rneigh = row-1;
         cneigh = col-1; 
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*W)+cneigh;
         if(map[row-1][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
+        
         }
         else if(map[row-1][col-1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
+      
         }
         else if(map[row-1][col-1] == 0){
             graph[i][j] = 1;
+          
         }
         else{
             graph[i][j] = 0;
@@ -217,7 +253,7 @@ void checkNeighbours(int row, int col){
     if (isValid(row+1,col+1, row_max, col_max) == true){
         rneigh = row+1;
         cneigh = col+1; 
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*W)+cneigh;
         if(map[row+1][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
@@ -234,7 +270,7 @@ void checkNeighbours(int row, int col){
     if (isValid(row+1,col-1, row_max, col_max) == true){
         rneigh = row+1;
         cneigh = col-1; 
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*W)+cneigh;
         if(map[row+1][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
@@ -248,9 +284,8 @@ void checkNeighbours(int row, int col){
             graph[i][j] = 0;
         }
     }
+   
 }
-
-
 
 // A Function to find the shortest path between
 // a given source cell to a destination cell according
@@ -700,7 +735,6 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
         for(int indx2=0;indx2<W;indx++)
         delete cellDetails[indx];
     }
-    cout << "asdf" << endl;
     delete []cellDetails;
 }
 
@@ -722,13 +756,13 @@ int main()
     H = 3;
     W = 3;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
-  
+    
     for(int row = 0; row < H; ++row){
         string line;
         getline(file, line);
         if (!file.good())
             return -1;
-
+        
         stringstream iss(line);
     
         vector<int> tmp;
@@ -746,36 +780,34 @@ int main()
         map.push_back(tmp);
     }
     file.close();
+  
+    cout << endl;
+    cout << "+++ FILE WAS READ CORRECTLY +++" << endl;
+    cout << endl;
 
     for(int i =0; i < H; i++){
         for(int j=0; j< W; j++){
             checkNeighbours(i,j);
         }
+      
     }
 
+    cout << endl;
+    cout << "+++ PRINTING GRAPH +++" << endl;
+    cout << endl;
     printGraph();
-    /* Description of the Grid- 
-     1--> The cell is not blocked 
-     0--> The cell is blocked    */
-    // int grid[H][W] =
-    //     {
-    //         {1, 0, 1, 1, 1, 1, 0, 1, 1, 1},
-    //         {1, 1, 1, 0, 1, 1, 1, 0, 1, 1},
-    //         {1, 1, 1, 0, 1, 1, 0, 1, 0, 1},
-    //         {0, 0, 1, 0, 1, 0, 0, 0, 0, 1},
-    //         {1, 1, 1, 0, 1, 1, 1, 0, 1, 0},
-    //         {1, 0, 1, 1, 1, 1, 0, 1, 0, 0},
-    //         {1, 0, 0, 0, 0, 1, 0, 0, 0, 1},
-    //         {1, 0, 1, 1, 1, 1, 0, 1, 1, 1},
-    //         {1, 1, 1, 0, 0, 0, 1, 0, 0, 1}};
+ 
 
     // // Source is the left-most bottom-most corner
      Pair src = make_pair(0, 1);
 
     // // Destination is the left-most top-most corner
-     Pair dest = make_pair(0,2);
+    Pair dest = make_pair(2,0);
+    cout << endl;
+    cout << "+++ COMPUTING ASTAR SOLUTION +++" << endl;
+    cout << endl;
 
     aStar(graph, src, dest);
-     cout << endl;
+    cout << endl;
     return (0);
 }

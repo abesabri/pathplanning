@@ -11,17 +11,14 @@
 #include <iomanip>
 
 using namespace std;
-// Number of vertices in the graph 
-// #define H 366  
-// #define W 362 
+
 //resolution value
 double resolution = 0.0500000007451;
 //Arrays to map 1D into 2D
 int H ,W;
 vector<vector<int> > map;
 vector<vector<int> > graph;
-//int *map[][];
-//int graph[H*W][H*W];
+//vectors to store path
 vector<vector<int> >v1;
 vector<vector<pair<double,double> > >v2; 
 
@@ -37,11 +34,11 @@ void checkNeighbours(int row, int col){
     int rneigh,cneigh,i,j;
     int row_max = map.size();
     int col_max = map[0].size();
-    i = (row*H)+col;
+    i = (row*(W)+col);
     if (isValid(row-1,col, row_max, col_max) == true){
         rneigh = row-1;
         cneigh = col;
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*W)+cneigh;
         if(map[row-1][col] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
@@ -54,12 +51,12 @@ void checkNeighbours(int row, int col){
         else{
             graph[i][j] = 0;
         }
-        
     }
+
     if (isValid(row+1,col, row_max, col_max) == true){
         rneigh = row+1;
         cneigh = col;
-        j = (rneigh*H)+cneigh;   
+        j = (rneigh*W)+cneigh;   
         if(map[row+1][col] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
@@ -78,7 +75,7 @@ void checkNeighbours(int row, int col){
     if (isValid(row,col+1, row_max, col_max) == true){
         cneigh = col+1; 
         rneigh = row;
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*W)+cneigh;
         if(map[row][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
@@ -95,7 +92,7 @@ void checkNeighbours(int row, int col){
     if (isValid(row,col-1, row_max, col_max) == true){
         cneigh = col-1; 
         rneigh = row;
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*W)+cneigh;
         if(map[row][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
@@ -112,7 +109,7 @@ void checkNeighbours(int row, int col){
     if (isValid(row-1,col+1, row_max, col_max) == true){
         rneigh = row-1;
         cneigh = col+1; 
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*W)+cneigh;
         if(map[row-1][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
@@ -129,7 +126,7 @@ void checkNeighbours(int row, int col){
     if (isValid(row-1,col-1, row_max, col_max) == true){
         rneigh = row-1;
         cneigh = col-1; 
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*W)+cneigh;
         if(map[row-1][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
@@ -146,7 +143,7 @@ void checkNeighbours(int row, int col){
     if (isValid(row+1,col+1, row_max, col_max) == true){
         rneigh = row+1;
         cneigh = col+1; 
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*(W))+cneigh;
         if(map[row+1][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
@@ -163,7 +160,7 @@ void checkNeighbours(int row, int col){
     if (isValid(row+1,col-1, row_max, col_max) == true){
         rneigh = row+1;
         cneigh = col-1; 
-        j = (rneigh*H)+cneigh;
+        j = (rneigh*W)+cneigh;
         if(map[row+1][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
@@ -260,7 +257,7 @@ void dijkstra(vector<vector<int> > &graph, int src)
     for (int i = 0; i < H*W; i++) 
     { 
         parent[0] = -1; 
-        dist[i] = INT_MAX; 
+        dist[i] = INT_MAX;
         sptSet[i] = false; 
     } 
   
@@ -280,8 +277,8 @@ void dijkstra(vector<vector<int> > &graph, int src)
         // Update dist value of the  
         // adjacent vertices of the 
         // picked vertex. 
-        for (int v = 0; v < H*W; v++) 
-  
+        for (int v = 0; v < H*W; v++) {
+
             // Update dist[v] only if is not in sptSet, there is an edge from u to v, and  
             // total weight of path from src to v through u is smaller 
             // than current value of dist[v] 
@@ -291,6 +288,7 @@ void dijkstra(vector<vector<int> > &graph, int src)
                 parent[v] = u; 
                 dist[v] = dist[u] + graph[u][v]; 
             }  
+        }
     } 
     // print the constructed distance array 
     printSolution(dist, H*W, parent); 
@@ -300,11 +298,12 @@ void dijkstra(vector<vector<int> > &graph, int src)
 int main() 
 { 
     std::ifstream file("no.txt");
-    H = 3;
-    W = 3;
+    H = 366;
+    W = 362;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
+    cout << graph.size() << endl;
     //int mapt[H][W];
-    //for(int row = 0; row < H; ++row){
+    for(int row = 0; row < H; ++row){
     std::string line;
     std::getline(file, line);
     if (!file.good())
@@ -312,8 +311,7 @@ int main()
 
     std::stringstream iss(line);
     
-    vector<int> tmp;
-    for(int row = 0; row < H; ++row){
+        vector<int> tmp;
         for (int col = 0; col < W; ++col)
         {
             int temp_int;
@@ -328,18 +326,13 @@ int main()
         map.push_back(tmp);
     }
 
-    //ARTURO: It is important that you always close files, for memory security reasons.
-    //Perhaps 95% of cases nothing will happen, but it can cause Segmentation Fault errors
-    file.close();
-
-    //ARTURO: I recommend to leave comments like this after each sstep of the process
-    //To make it easier to debug when something goes wrong
     cout << endl;
     cout << "+++ FILE WAS READ CORRECTLY +++" << endl;
     cout << endl;
 
     for(int i = 0; i < H; i++){
         for(int j = 0; j< W; j++){
+            cout << i << " " << j << endl;
             checkNeighbours(i,j);
         }   
     }
@@ -348,7 +341,6 @@ int main()
     cout << "+++ PRINTING GRAPH +++" << endl;
     cout << endl;
     printGraph();
-
 
     cout << endl;
     cout << "+++ COMPUTING DIJKSTRA SOLUTION +++" << endl;
