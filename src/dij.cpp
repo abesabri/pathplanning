@@ -178,12 +178,12 @@ void checkNeighbours(int row, int col){
 
 
 // A utility function to find the vertex with minimum distance value, from the set of vertices not yet included in shortest path tree 
-int minDistance(int dist[], bool sptSet[]) 
+int minDistance(int dist[], bool spt[]) 
 { 
     // Initialize min value 
     int min = INT_MAX, min_index; 
     for (int v = 0; v < H*W; v++) 
-        if (sptSet[v] == false && dist[v] <= min){
+        if (spt[v] == false && dist[v] <= min){
             min = dist[v];
             min_index = v;
         }
@@ -248,7 +248,7 @@ void dijkstra(vector<vector<int> > &graph, int src)
   
     // sptSet[i] will true if vertex i is included / in shortest 
     // path tree or shortest distance from src to i is finalized 
-    bool sptSet[H*W]; 
+    bool spt[H*W]; 
   
     // Parent array to store shortest path tree 
     int parent[H*W]; 
@@ -258,21 +258,21 @@ void dijkstra(vector<vector<int> > &graph, int src)
     { 
         parent[0] = -1; 
         dist[i] = INT_MAX;
-        sptSet[i] = false; 
+        spt[i] = false; 
     } 
   
     // Distance of source vertex from itself is always 0 
     dist[src] = 0; 
   
     // Find shortest path for all vertices 
-    for (int count = 0; count < H*W - 1; count++) 
+    for (int i = 0; i < H*W - 1; i++) 
     { 
         // Pick the minimum distance vertex from the set of 
         // vertices not yet processed. u is always equal to src in first iteration. 
-        int u = minDistance(dist, sptSet); 
+        int l = minDistance(dist, spt); 
   
         // Mark the picked vertex as processed 
-        sptSet[u] = true; 
+        spt[l] = true; 
   
         // Update dist value of the  
         // adjacent vertices of the 
@@ -282,11 +282,11 @@ void dijkstra(vector<vector<int> > &graph, int src)
             // Update dist[v] only if is not in sptSet, there is an edge from u to v, and  
             // total weight of path from src to v through u is smaller 
             // than current value of dist[v] 
-            if (!sptSet[v] && graph[u][v] && 
-                dist[u] != INT_MAX && dist[u]+ graph[u][v] < dist[v]) 
+            if (!spt[v] && graph[l][v] && 
+                dist[l] != INT_MAX && dist[l]+ graph[l][v] < dist[v]) 
             { 
-                parent[v] = u; 
-                dist[v] = dist[u] + graph[u][v]; 
+                parent[v] = l; 
+                dist[v] = dist[l] + graph[l][v]; 
             }  
         }
     } 
@@ -297,29 +297,27 @@ void dijkstra(vector<vector<int> > &graph, int src)
 // Driver Code 
 int main() 
 { 
-    std::ifstream file("no.txt");
-    H = 366;
-    W = 362;
+    ifstream file("no.txt");
+    H = 3;
+    W = 3;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
-    cout << graph.size() << endl;
-    //int mapt[H][W];
     for(int row = 0; row < H; ++row){
-    std::string line;
-    std::getline(file, line);
+    string line;
+    getline(file, line);
     if (!file.good())
         return -1;
 
-    std::stringstream iss(line);
+    stringstream iss(line);
     
         vector<int> tmp;
         for (int col = 0; col < W; ++col)
         {
             int temp_int;
-            std::string val;
-            std::getline(iss, val, ',');
+            string val;
+            getline(iss, val, ',');
             if ( !iss.good() )
                 break;
-            std::stringstream convertor(val);
+            stringstream convertor(val);
             convertor >> temp_int;
             tmp.push_back(temp_int);   
         }
@@ -332,7 +330,6 @@ int main()
 
     for(int i = 0; i < H; i++){
         for(int j = 0; j< W; j++){
-            cout << i << " " << j << endl;
             checkNeighbours(i,j);
         }   
     }
@@ -348,8 +345,9 @@ int main()
     dijkstra(graph, 0); 
     cout << endl;
 
-    printf("\n\n");
-
+    cout << endl;
+    cout << "+++ COMPUTING PATH IN RESOLUTION +++" << endl;
+    cout << endl;
     Path2D(v1,v2);
     for(int i =0; i<v2.size(); i++){
         for(int j=0; j<v2[i].size(); j++){

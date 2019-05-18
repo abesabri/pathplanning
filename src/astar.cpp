@@ -123,7 +123,7 @@ void tracePath(cell **cellDetails, Pair dest)
     }
         cout << "\nPath in resolution" << endl;
         for(int i =0; i<vecPath.size();i++){
-            cout << fixed << setprecision(20)<< vecPath[i].first << " " <<fixed << setprecision(20)<< vecPath[i].second << " ";
+            cout << fixed << setprecision(15)<< vecPath[i].first << " " <<fixed << setprecision(15)<< vecPath[i].second << " ";
         }
         cout << endl;
 
