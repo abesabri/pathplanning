@@ -204,11 +204,12 @@ void printPath(int parent[], int x, vector<int> &v)
 void printSolution(int dist[], int n, int parent[]) 
 { 
     int src = 0; 
-    printf("Vertex\t\t Distance\tPath\n");
+    cout << "Vertex\t\t Distance\tPath" << endl;
     for (int i = 1; i < H*W; i++) 
     { 
         vector<int> v;
-        printf("\n%d -> %d \t\t %d\t\t%d", src, i, dist[i], src); 
+        cout << endl;
+        cout << src << " -> " << i <<" \t\t " << dist[i] << "\t\t" << src;   
         printPath(parent, i, v);
         v1.push_back(v);
     }
