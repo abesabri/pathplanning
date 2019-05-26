@@ -70,11 +70,20 @@ bool isDestination(int row, int col, Pair dest)
 }
 
 // A Utility Function to calculate the 'h' heuristics.
-double calculateHValue(int row, int col, Pair dest)
-{
-    // Return using the distance formula
-    return ((double)sqrt((row - dest.first) * (row - dest.first) + (col - dest.second) * (col - dest.second)));
+// double calculateHValue(int row, int col, Pair dest)
+// {
+//     // Return using the distance formula
+//     return ((double)sqrt((row - dest.first) * (row - dest.first) + (col - dest.second) * (col - dest.second)));
+// }
+
+double calculateHValue(int row, int col, Pair dest){
+    return (abs((row - dest.first)+(col-dest.second)));
 }
+
+// double calculateHValue(int row, int col, Pair dest){
+//     double m = max(abs((row - dest.first)),abs((col-dest.second)));
+//     return (m);
+// }
 
 // A Utility Function to trace the path from the source
 // to destination
@@ -753,8 +762,8 @@ void printGraph(){
 int main()
 {
     ifstream file("no.txt");
-    H = 3;
-    W = 3;
+    H = 6;
+    W = 16;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
     
     for(int row = 0; row < H; ++row){
@@ -797,12 +806,11 @@ int main()
     cout << endl;
     printGraph();
  
-
     // // Source is the left-most bottom-most corner
-     Pair src = make_pair(0, 1);
+     Pair src = make_pair(0, 15);
 
     // // Destination is the left-most top-most corner
-    Pair dest = make_pair(2,0);
+    Pair dest = make_pair(5,0);
     cout << endl;
     cout << "+++ COMPUTING ASTAR SOLUTION +++" << endl;
     cout << endl;
