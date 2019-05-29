@@ -1,19 +1,14 @@
 // A C++ Program to implement A* Search Algorithm
-
 #include <cfloat>
-#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <set>
 #include <sstream>
 #include <stack>
-#include <string>
-#include <utility>
 #include <vector>
 #include <iomanip>
 using namespace std;
 
-typedef pair<int,int> pathTemp;
 typedef pair<double,double> pathStore;
 
 //resolution value
@@ -27,7 +22,7 @@ vector<vector<int> > graph;
 typedef pair<int, int> Pair;
 
 // Creating a shortcut for pair<int, pair<int, int>> type
-typedef pair<double, pair<int, int> > pPair;
+typedef pair<int, pair<int, int> > pPair;
 
 // A structure to hold the neccesary parameters
 struct cell
@@ -89,7 +84,7 @@ double calculateHValue(int row, int col, Pair dest){
 // to destination
 void tracePath(cell **cellDetails, Pair dest)
 {
-    printf("\nThe Path is ");
+    cout << "\nThe Path is";
     int row = dest.first;
     int col = dest.second;
     double x,y;
@@ -105,8 +100,7 @@ void tracePath(cell **cellDetails, Pair dest)
         col = temp_col;
     }
 
-  
-    vector<pathTemp> vecTemp;
+    vector<Pair> vecTemp;
     vector<pathStore> vecPath;
     
 
@@ -132,7 +126,7 @@ void tracePath(cell **cellDetails, Pair dest)
     }
         cout << "\nPath in resolution" << endl;
         for(int i =0; i<vecPath.size();i++){
-            cout << fixed << setprecision(15)<< vecPath[i].first << " " <<fixed << setprecision(15)<< vecPath[i].second << " ";
+            cout << fixed << setprecision(15)<< vecPath[i].first << " " <<fixed << setprecision(15)<< vecPath[i].second << " " << endl;
         }
         cout << endl;
 
@@ -410,7 +404,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                 // Set the Parent of the destination cell
                 cellDetails[i - 1][j].parent_i = i;
                 cellDetails[i - 1][j].parent_j = j;
-                printf("The destination cell is found\n");
+                cout << "The destination cell is found" << endl;
                 tracePath(cellDetails, dest);
                 foundDest = true;
                 return;
@@ -738,13 +732,14 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
     if (foundDest == false)
         printf("Failed to find the Destination Cell\n");
 
-    return;
+    
     //deallocation of cellDetails
     for(int indx=0;indx<H;indx++){
         for(int indx2=0;indx2<W;indx++)
         delete cellDetails[indx];
     }
     delete []cellDetails;
+    return;
 }
 
 void printGraph(){
@@ -762,8 +757,8 @@ void printGraph(){
 int main()
 {
     ifstream file("no.txt");
-    H = 6;
-    W = 16;
+    H = 3;
+    W = 3;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
     
     for(int row = 0; row < H; ++row){
@@ -798,7 +793,6 @@ int main()
         for(int j=0; j< W; j++){
             checkNeighbours(i,j);
         }
-      
     }
 
     cout << endl;
@@ -807,10 +801,10 @@ int main()
     printGraph();
  
     // // Source is the left-most bottom-most corner
-     Pair src = make_pair(0, 15);
+    Pair src = make_pair(0, 0);
 
     // // Destination is the left-most top-most corner
-    Pair dest = make_pair(5,0);
+    Pair dest = make_pair(2,0);
     cout << endl;
     cout << "+++ COMPUTING ASTAR SOLUTION +++" << endl;
     cout << endl;

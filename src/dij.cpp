@@ -298,9 +298,9 @@ void dijkstra(vector<vector<int> > &graph, int src)
 // Driver Code 
 int main() 
 { 
-    ifstream file("num.txt");
-    H = 366;
-    W = 362;
+    ifstream file("no.txt");
+    H = 3;
+    W = 3;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
     for(int row = 0; row < H; ++row){
     string line;
