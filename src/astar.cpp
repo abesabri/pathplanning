@@ -1,14 +1,19 @@
 // A C++ Program to implement A* Search Algorithm
+
 #include <cfloat>
+#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <set>
 #include <sstream>
 #include <stack>
+#include <string>
+#include <utility>
 #include <vector>
 #include <iomanip>
 using namespace std;
 
+typedef pair<int,int> pathTemp;
 typedef pair<double,double> pathStore;
 
 //resolution value
@@ -22,7 +27,7 @@ vector<vector<int> > graph;
 typedef pair<int, int> Pair;
 
 // Creating a shortcut for pair<int, pair<int, int>> type
-typedef pair<int, pair<int, int> > pPair;
+typedef pair<double, pair<int, int> > pPair;
 
 // A structure to hold the neccesary parameters
 struct cell
@@ -65,15 +70,27 @@ bool isDestination(int row, int col, Pair dest)
 }
 
 // A Utility Function to calculate the 'h' heuristics.
-// double calculateHValue(int row, int col, Pair dest)
-// {
-//     // Return using the distance formula
-//     return ((double)sqrt((row - dest.first) * (row - dest.first) + (col - dest.second) * (col - dest.second)));
-// }
-
-double calculateHValue(int row, int col, Pair dest){
-    return (abs((row - dest.first)+(col-dest.second)));
+double calculateHValue(int row, int col, Pair src, Pair dest)
+{
+    double dx1,dy1,dx2,dy2,cross,heuristic = 0;
+    if(map[row][col] == 100) {
+        heuristic = 1000;
+        return heuristic;
+    }
+    dx1 = row - dest.first;
+    dy1 = col - dest.second;
+    dx2 = src.first - dest.first;
+    dy2 = src.second - dest.second;
+    cross = dx1*dy2 - dx2*dy1;
+    heuristic += cross*0.001;
+    return heuristic;
+    // Return using the distance formula
+    //return ((double)sqrt((row - dest.first) * (row - dest.first) + (col - dest.second) * (col - dest.second)));
 }
+
+// double calculateHValue(int row, int col, Pair dest){
+//     return (abs((row - dest.first)+(col-dest.second)));
+// }
 
 // double calculateHValue(int row, int col, Pair dest){
 //     double m = max(abs((row - dest.first)),abs((col-dest.second)));
@@ -84,7 +101,7 @@ double calculateHValue(int row, int col, Pair dest){
 // to destination
 void tracePath(cell **cellDetails, Pair dest)
 {
-    cout << "\nThe Path is";
+    printf("\nThe Path is ");
     int row = dest.first;
     int col = dest.second;
     double x,y;
@@ -100,7 +117,8 @@ void tracePath(cell **cellDetails, Pair dest)
         col = temp_col;
     }
 
-    vector<Pair> vecTemp;
+  
+    vector<pathTemp> vecTemp;
     vector<pathStore> vecPath;
     
 
@@ -126,7 +144,7 @@ void tracePath(cell **cellDetails, Pair dest)
     }
         cout << "\nPath in resolution" << endl;
         for(int i =0; i<vecPath.size();i++){
-            cout << fixed << setprecision(15)<< vecPath[i].first << " " <<fixed << setprecision(15)<< vecPath[i].second << " " << endl;
+            cout << fixed << setprecision(20)<< vecPath[i].first << " " <<fixed << setprecision(20)<< vecPath[i].second << " " << endl;
         }
         cout << endl;
 
@@ -404,7 +422,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                 // Set the Parent of the destination cell
                 cellDetails[i - 1][j].parent_i = i;
                 cellDetails[i - 1][j].parent_j = j;
-                cout << "The destination cell is found" << endl;
+                printf("The destination cell is found\n");
                 tracePath(cellDetails, dest);
                 foundDest = true;
                 return;
@@ -416,7 +434,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                      isUnBlocked(graph, i - 1, j) == true)
             {
                 gNew = cellDetails[i][j].g + 1.0;
-                hNew = calculateHValue(i - 1, j, dest);
+                hNew = calculateHValue(i - 1, j, src,dest);
                 fNew = gNew + hNew;
 
                 // If it isn’t on the open list, add it to
@@ -463,7 +481,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                      isUnBlocked(graph, i + 1, j) == true)
             {
                 gNew = cellDetails[i][j].g + 1.0;
-                hNew = calculateHValue(i + 1, j, dest);
+                hNew = calculateHValue(i + 1, j,src, dest);
                 fNew = gNew + hNew;
 
                
@@ -503,7 +521,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                      isUnBlocked(graph, i, j + 1) == true)
             {
                 gNew = cellDetails[i][j].g + 1.0;
-                hNew = calculateHValue(i, j + 1, dest);
+                hNew = calculateHValue(i, j + 1, src,dest);
                 fNew = gNew + hNew;
 
                
@@ -544,7 +562,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                      isUnBlocked(graph, i, j - 1) == true)
             {
                 gNew = cellDetails[i][j].g + 1.0;
-                hNew = calculateHValue(i, j - 1, dest);
+                hNew = calculateHValue(i, j - 1,src, dest);
                 fNew = gNew + hNew;
 
              
@@ -586,7 +604,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                      isUnBlocked(graph, i - 1, j + 1) == true)
             {
                 gNew = cellDetails[i][j].g + 1.414;
-                hNew = calculateHValue(i - 1, j + 1, dest);
+                hNew = calculateHValue(i - 1, j + 1,src, dest);
                 fNew = gNew + hNew;
 
               
@@ -627,7 +645,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                      isUnBlocked(graph, i - 1, j - 1) == true)
             {
                 gNew = cellDetails[i][j].g + 1.414;
-                hNew = calculateHValue(i - 1, j - 1, dest);
+                hNew = calculateHValue(i - 1, j - 1, src,dest);
                 fNew = gNew + hNew;
 
        
@@ -666,7 +684,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                      isUnBlocked(graph, i + 1, j + 1) == true)
             {
                 gNew = cellDetails[i][j].g + 1.414;
-                hNew = calculateHValue(i + 1, j + 1, dest);
+                hNew = calculateHValue(i + 1, j + 1, src,dest);
                 fNew = gNew + hNew;
 
                 if (cellDetails[i + 1][j + 1].f == FLT_MAX ||
@@ -706,7 +724,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                      isUnBlocked(graph, i + 1, j - 1) == true)
             {
                 gNew = cellDetails[i][j].g + 1.414;
-                hNew = calculateHValue(i + 1, j - 1, dest);
+                hNew = calculateHValue(i + 1, j - 1, src,dest);
                 fNew = gNew + hNew;
 
                 if (cellDetails[i + 1][j - 1].f == FLT_MAX ||
@@ -732,14 +750,13 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
     if (foundDest == false)
         printf("Failed to find the Destination Cell\n");
 
-    
+    return;
     //deallocation of cellDetails
     for(int indx=0;indx<H;indx++){
         for(int indx2=0;indx2<W;indx++)
         delete cellDetails[indx];
     }
     delete []cellDetails;
-    return;
 }
 
 void printGraph(){
@@ -756,60 +773,70 @@ void printGraph(){
 // Driver program to test above function
 int main()
 {
-    ifstream file("no.txt");
-    H = 3;
-    W = 3;
+    ifstream file("num.txt");
+    H = 366;
+    W = 362;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
+    std::string line;
+    std::getline(file, line);
+    if (!file.good())
+        return -1;
+
+    std::stringstream iss(line);
     
+    //vector<int> tmp;
     for(int row = 0; row < H; ++row){
-        string line;
-        getline(file, line);
-        if (!file.good())
-            return -1;
-        
-        stringstream iss(line);
-    
         vector<int> tmp;
         for (int col = 0; col < W; ++col)
         {
             int temp_int;
-            string val;
-            getline(iss, val, ',');
+            std::string val;
+            std::getline(iss, val, ',');
             if ( !iss.good() )
                 break;
-            stringstream convertor(val);
+            std::stringstream convertor(val);
             convertor >> temp_int;
-            tmp.push_back(temp_int);  
+            tmp.push_back(temp_int);   
         }
         map.push_back(tmp);
     }
+
     file.close();
   
+  for(int i =0; i < map.size(); i++){
+        for(int j=0; j<map[i].size();j++){
+            cout << map[i][j] << "\t";
+        }
+        cout << endl;
+    }
+
     cout << endl;
     cout << "+++ FILE WAS READ CORRECTLY +++" << endl;
     cout << endl;
 
-    for(int i =0; i < H; i++){
-        for(int j=0; j< W; j++){
-            checkNeighbours(i,j);
-        }
-    }
+    // for(int i =0; i < H; i++){
+    //     for(int j=0; j< W; j++){
+    //         checkNeighbours(i,j);
+    //     }
+      
+    // }
 
-    cout << endl;
-    cout << "+++ PRINTING GRAPH +++" << endl;
-    cout << endl;
-    printGraph();
+    // cout << endl;
+    // cout << "+++ PRINTING GRAPH +++" << endl;
+    // cout << endl;
+    // printGraph();
  
-    // // Source is the left-most bottom-most corner
-    Pair src = make_pair(0, 0);
 
-    // // Destination is the left-most top-most corner
-    Pair dest = make_pair(2,0);
-    cout << endl;
-    cout << "+++ COMPUTING ASTAR SOLUTION +++" << endl;
-    cout << endl;
+    // // // Source is the left-most bottom-most corner
+    //  Pair src = make_pair(0, 4);
 
-    aStar(graph, src, dest);
-    cout << endl;
+    // // // Destination is the left-most top-most corner
+    // Pair dest = make_pair(4,0);
+    // cout << endl;
+    // cout << "+++ COMPUTING ASTAR SOLUTION +++" << endl;
+    // cout << endl;
+
+    // aStar(graph, src, dest);
+    // cout << endl;
     return (0);
 }
