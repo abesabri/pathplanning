@@ -298,33 +298,48 @@ void dijkstra(vector<vector<int> > &graph, int src)
 // Driver Code 
 int main() 
 { 
-    ifstream file("no.txt");
-    H = 3;
-    W = 3;
+    std::ifstream file("num.txt");
+    H = 150;
+    W = 150;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
-    for(int row = 0; row < H; ++row){
-    string line;
-    getline(file, line);
-    if (!file.good())
-        return -1;
+    //int mapt[H][W];
+    //for(int row = 0; row < H; ++row){
+    cout << "+++ READING FILE +++" << endl;
+    std::string line;
+    //std::getline(file, line);
+    //if (!file.good())
+    //    return -1;
 
-    stringstream iss(line);
-    
-        vector<int> tmp;
-        for (int col = 0; col < W; ++col)
-        {
-            int temp_int;
-            string val;
-            getline(iss, val, ',');
-            if ( !iss.good() )
-                break;
-            stringstream convertor(val);
-            convertor >> temp_int;
-            tmp.push_back(temp_int);   
-        }
-        map.push_back(tmp);
-    }
+    //std::stringstream iss(line);
+    //cout << "+++ READING FILE 2 +++" << endl;
 
+    //vector<int> tmp;
+    // for(int row = 0; row < H; ++row){
+    //     vector<int> tmp;
+    //     for (int col = 0; col < W; ++col)
+    //     {
+    //         int temp_int;
+    //         std::string val;
+    //         std::getline(iss, val, ',');
+    //         if ( !iss.good() )
+    //             break;
+    //         std::stringstream convertor(val);
+    //         convertor >> temp_int;
+    //         tmp.push_back(temp_int);   
+    //     }
+    //     map.push_back(tmp);
+    //     tmp.clear();
+    //     tmp.~vector();
+    // }
+
+    //ARTURO: It is important that you always close files, for memory security reasons.
+    //Perhaps 95% of cases nothing will happen, but it can cause Segmentation Fault errors
+    file.close();
+    cout << "+++ FILE WAS READ CORRECTLY +++" << endl;
+
+    //ARTURO: I recommend to leave comments like this after each sstep of the process
+    //To make it easier to debug when something goes wrong
+    /*
     cout << endl;
     cout << "+++ FILE WAS READ CORRECTLY +++" << endl;
     cout << endl;
@@ -356,6 +371,6 @@ int main()
         }
         cout << endl;
     }
-    cout << endl;
+    cout << endl;*/
     return 0; 
 } 
