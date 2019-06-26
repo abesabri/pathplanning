@@ -9,7 +9,8 @@ for line in f:
 
 print(array)
 
-for x in enumerate(array):
+a = 0
+for x in array:
     if x == '0':
         a = 0
         array1.append(a)
@@ -21,6 +22,15 @@ for x in enumerate(array):
         array1.append(a)
     else:
         continue
-print(array1)
+
 
 f.close()
+
+print(array1)
+
+file = open("new.txt","w")
+for i in range(len(array1)):
+    file.write("%i " % (array1[i]))
+file.close()
+
+ 
