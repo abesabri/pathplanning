@@ -11,21 +11,21 @@
 using namespace cv;
 using namespace std;
 
-void readFile(string, float[], ifstream &);
+void readFile(string, vector<float>, ifstream &);
 
 /** @function main */
 int main ( int argc, char** argv )
 {
     ifstream inFile;
     string strFileName = "new";
-    float V[100];
+    vector <float> V;
     
     readFile(strFileName, V, inFile);
 
     int r = 366, c = 362;
     //Mat1d M(r,c,CV_32FC1);
     Mat1d dsrc(CV_32FC1,CV_32FC1);
-    Mat1d copy_1 = Mat(dsrc.rows, dsrc.cols, CV_32F, V);
+    Mat1d copy_1 = Mat(dsrc.rows, dsrc.cols, CV_32F, V.data()).clone();
     //memcpy(M.data,V.data(),V.size()*sizeof(float));
   
     
@@ -53,16 +53,15 @@ return 0;
 
 }
 
-void readFile(string strFile, float v[], ifstream &iFile){
+void readFile(string strFile, vector<float> v, ifstream &iFile){
     iFile.open("new.txt");
     if(!iFile){
         cout << "Error opening file" << endl;
         system("pause");
     }
-    int value, i = 0;
+    int value;
     while(iFile >> value){
-        v[i] = value;
-        i++;
+        v.push_back(value);
     }
 
     iFile.close();
