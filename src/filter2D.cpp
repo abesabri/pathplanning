@@ -27,30 +27,46 @@ int main ( int argc, char** argv )
     //Mat1d dsrc(CV_32FC1,CV_32FC1);
     //Mat1d copy_1 = Mat(dsrc.rows, dsrc.cols, CV_32F, V.data()).clone();
     //memcpy(M.data,V.data(),V.size()*sizeof(float));
+
+    //Copying vector to Mat
     int r = 1, c = 10;
     Mat M(r,c,CV_32F,V);
 
-    /// Declare variables   
+    /// Declare variables  
+    Mat intMat; 
     Mat dst;
     Mat kernel;
     Point anchor;
     double delta;
     int ddepth;
     int kernel_size;
-
+    double minVal;
+    double maxVal;
+    Point minLoc;
+    Point maxLoc;
+    
     /// Initialize arguments for the filter
 
     anchor = Point( -1, -1 );
     delta = 0;
     ddepth = -1;
-
+    
     /// Update kernel size for a normalized box filter
     kernel_size = 3 + 2;
     kernel = Mat::ones( kernel_size, kernel_size, CV_32F )/ (float)(kernel_size*kernel_size);
-
     /// Apply filter
     cv::filter2D(M, dst, ddepth , kernel, anchor, delta, BORDER_DEFAULT );
     //imshow("t",dst);
+
+    // Min and Max value of Mat
+    minMaxLoc(dst,&minVal,&maxVal,&minLoc,&maxLoc);
+    cout << "min: " << minVal << endl;
+    cout << "max: " << maxVal << endl;
+    if (minVal!=maxVal){
+        dst.convertTo(intMat,CV_8U,255.0/(maxVal-minVal),-255.0*minVal/(maxVal-minVal));
+    }
+
+    imshow("t",intMat);
 
 return 0;
 
