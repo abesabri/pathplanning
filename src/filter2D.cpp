@@ -47,11 +47,7 @@ int main ( int argc, char** argv )
     ddepth = -1;
     
     /// Update kernel size for a normalized box filter
-<<<<<<< HEAD
     kernel_size = 3;
-=======
-    kernel_size = 3 + 2;
->>>>>>> 47278a9325f20584fbc13ce2073c406cb38940d1
     kernel = Mat::ones( kernel_size, kernel_size, CV_32FC1 )/ (float)(kernel_size*kernel_size);
     /// Apply filter
     cv::filter2D(M, dst, ddepth , kernel, anchor, delta, BORDER_DEFAULT );
@@ -76,14 +72,9 @@ int main ( int argc, char** argv )
     //Dummy Mat -- it can be used it with imshow to see that imshow works
     //Mat test = Mat::zeros(cv::Size(50,50),CV_8UC3);
     //imshow("t",test);
-<<<<<<< HEAD
     namedWindow("result",WINDOW_NORMAL);
     //resizeWindow("result",400,300);
     imshow("result",intMat);
-=======
-    
-    imshow("t",intMat);
->>>>>>> 47278a9325f20584fbc13ce2073c406cb38940d1
     //A waitKey must be included to keep the image window open until a key is pressed
     //Otherwise the windows appears and disappears to quickly for it to be seen
     waitKey(0);
