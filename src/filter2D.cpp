@@ -18,10 +18,9 @@ int main ( int argc, char** argv )
 {
     ifstream inFile;
     string strFileName = "new.txt";
-    float V[10];
+    float V[132492];
     
     readFile(strFileName, V, inFile);
-
   
     //Copying vector to Mat
     int r = 1, c = 10;
@@ -69,8 +68,19 @@ int main ( int argc, char** argv )
         std::cout << std::endl;
     }
 
+// int sum;
+
+//      for(int i=kernel_size/2; i < intMat.rows; i+=kernel_size)
+//      {
+//          for(int j=kernel_size/2; j < intMat.cols; j+=kernel_size)
+//          {
+//              sum += intMat.at<double>(i,j);
+//          }
+//     }
+        
+
     //Dummy Mat -- it can be used it with imshow to see that imshow works
-    //Mat test = Mat::zeros(cv::Size(50,50),CV_8UC3);
+    //Mat test = Mat::zeros(cv::Size(400,300),CV_8UC3);
     //imshow("t",test);
     namedWindow("result",WINDOW_NORMAL);
     //resizeWindow("result",400,300);

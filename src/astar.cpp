@@ -73,7 +73,7 @@ bool isDestination(int row, int col, Pair dest)
 double calculateHValue(int row, int col, Pair src, Pair dest)
 {
     double dx1,dy1,dx2,dy2,cross,heuristic = 0;
-    if(map[row][col] == 100) {
+    if(map[row][col] == 3) {
         heuristic = 1000;
         return heuristic;
     }
@@ -162,8 +162,8 @@ void checkNeighbours(int row, int col){
         rneigh = row-1;
         cneigh = col;
         j = (rneigh*W)+cneigh;
-        if(map[row-1][col] == 100 || map[row][col] == 100){
-            graph[i][j] = 100;
+        if(map[row-1][col] == 3 || map[row][col] == 3){
+            graph[i][j] = 3;
         }
         else if(map[row-1][col] == -1 || map[row][col] == -1){
             graph[i][j] = 50; 
@@ -180,8 +180,8 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col;
         j = (rneigh*W)+cneigh;   
-        if(map[row+1][col] == 100 || map[row][col] == 100){
-            graph[i][j] = 100;
+        if(map[row+1][col] == 3 || map[row][col] == 3){
+            graph[i][j] = 3;
      
         }
         else if(map[row+1][col] == -1 || map[row][col] == -1){
@@ -200,8 +200,8 @@ void checkNeighbours(int row, int col){
         cneigh = col+1; 
         rneigh = row;
         j = (rneigh*W)+cneigh;
-        if(map[row][col+1] == 100 || map[row][col] == 100){
-            graph[i][j] = 100;
+        if(map[row][col+1] == 3 || map[row][col] == 3){
+            graph[i][j] = 3;
         }
         else if(map[row][col+1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;   
@@ -218,8 +218,8 @@ void checkNeighbours(int row, int col){
         rneigh = row;
         j = (rneigh*W)+cneigh;
       
-        if(map[row][col-1] == 100 || map[row][col] == 100){
-            graph[i][j] = 100;
+        if(map[row][col-1] == 3 || map[row][col] == 3){
+            graph[i][j] = 3;
            
         }
         else if(map[row][col-1] == -1 || map[row][col] == -1){
@@ -237,8 +237,8 @@ void checkNeighbours(int row, int col){
         cneigh = col+1; 
         j = (rneigh*W)+cneigh;
    
-        if(map[row-1][col+1] == 100 || map[row][col] == 100){
-            graph[i][j] = 100;
+        if(map[row-1][col+1] == 3 || map[row][col] == 3){
+            graph[i][j] = 3;
         }
         else if(map[row-1][col+1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
@@ -255,8 +255,8 @@ void checkNeighbours(int row, int col){
         rneigh = row-1;
         cneigh = col-1; 
         j = (rneigh*W)+cneigh;
-        if(map[row-1][col-1] == 100 || map[row][col] == 100){
-            graph[i][j] = 100;
+        if(map[row-1][col-1] == 3 || map[row][col] == 3){
+            graph[i][j] = 3;
         
         }
         else if(map[row-1][col-1] == -1 || map[row][col] == -1){
@@ -275,8 +275,8 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col+1; 
         j = (rneigh*W)+cneigh;
-        if(map[row+1][col+1] == 100 || map[row][col] == 100){
-            graph[i][j] = 100;
+        if(map[row+1][col+1] == 3 || map[row][col] == 3){
+            graph[i][j] = 3;
         }
         else if(map[row+1][col+1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
@@ -292,8 +292,8 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col-1; 
         j = (rneigh*W)+cneigh;
-        if(map[row+1][col-1] == 100 || map[row][col] == 100){
-            graph[i][j] = 100;
+        if(map[row+1][col-1] == 3 || map[row][col] == 3){
+            graph[i][j] = 3;
         }
         else if(map[row+1][col-1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
@@ -773,17 +773,20 @@ void printGraph(){
 // Driver program to test above function
 int main()
 {
-    ifstream file("num.txt");
-    H = 366;
-    W = 362;
+    ifstream file("new.txt");
+    H = 122;
+    W = 121;
+    cout << "a" << endl;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
+    cout << "b" << endl;
     std::string line;
     std::getline(file, line);
-    if (!file.good())
-        return -1;
-
+    cout << "c" << endl;
+    // if (!file.good())   /////GET THIS PART CHECK ??
+    //     return -1;
+    cout << "d" << endl;
     std::stringstream iss(line);
-    
+       cout << "e" << endl;
     //vector<int> tmp;
     for(int row = 0; row < H; ++row){
         vector<int> tmp;
@@ -814,29 +817,29 @@ int main()
     cout << "+++ FILE WAS READ CORRECTLY +++" << endl;
     cout << endl;
 
-    // for(int i =0; i < H; i++){
-    //     for(int j=0; j< W; j++){
-    //         checkNeighbours(i,j);
-    //     }
+    for(int i =0; i < H; i++){
+        for(int j=0; j< W; j++){
+            checkNeighbours(i,j);
+        }
       
-    // }
+    }
 
-    // cout << endl;
-    // cout << "+++ PRINTING GRAPH +++" << endl;
-    // cout << endl;
-    // printGraph();
+    cout << endl;
+    cout << "+++ PRINTING GRAPH +++" << endl;
+    cout << endl;
+    printGraph();
  
 
-    // // // Source is the left-most bottom-most corner
-    //  Pair src = make_pair(0, 4);
+    // // Source is the left-most bottom-most corner
+     Pair src = make_pair(120, 120);
 
-    // // // Destination is the left-most top-most corner
-    // Pair dest = make_pair(4,0);
-    // cout << endl;
-    // cout << "+++ COMPUTING ASTAR SOLUTION +++" << endl;
-    // cout << endl;
+    // // Destination is the left-most top-most corner
+    Pair dest = make_pair(10,10);
+    cout << endl;
+    cout << "+++ COMPUTING ASTAR SOLUTION +++" << endl;
+    cout << endl;
 
-    // aStar(graph, src, dest);
-    // cout << endl;
+    aStar(graph, src, dest);
+    cout << endl;
     return (0);
 }

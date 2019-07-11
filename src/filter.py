@@ -1,10 +1,10 @@
-f = open("num.txt")
+f = open("map_downsample.txt")
 
 array = []
 array1 = []
 
 for line in f:
-    for num in line.rstrip().split(", "):
+    for num in line.rstrip().split(","):
         array.append(num)
 
 #print(array)
@@ -25,7 +25,7 @@ for x in array:
 
 
 f.close()
-my = ", ".join(map(str,array1))
+my = ",".join(map(str,array1))
 print(my)
 #print(array1)
 
