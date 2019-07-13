@@ -178,7 +178,7 @@ void checkNeighbours(int row, int col){
 
 
 // A utility function to find the vertex with minimum distance value, from the set of vertices not yet included in shortest path tree 
-int minDistance(int dist[], bool spt[]) 
+int mDist(int dist[], bool spt[]) 
 { 
     // Initialize min value 
     int min = INT_MAX, min_index; 
@@ -270,7 +270,7 @@ void dijkstra(vector<vector<int> > &graph, int src)
     { 
         // Pick the minimum distance vertex from the set of 
         // vertices not yet processed. u is always equal to src in first iteration. 
-        int l = minDistance(dist, spt); 
+        int l = mDist(dist, spt); 
   
         // Mark the picked vertex as processed 
         spt[l] = true; 

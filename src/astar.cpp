@@ -11,6 +11,9 @@
 #include <utility>
 #include <vector>
 #include <iomanip>
+#include "yaml-cpp/yaml.h"
+
+
 using namespace std;
 
 typedef pair<int,int> pathTemp;
@@ -20,7 +23,7 @@ typedef pair<double,double> pathStore;
 double resolution = 0.0500000007451;
 // Arrays to convert 1D data into 2D array
 int H,W;
-vector<vector<int> > map;
+vector<vector<int> > map1;
 vector<vector<int> > graph;
 
 // Creating a shortcut for int, int pair type
@@ -28,6 +31,7 @@ typedef pair<int, int> Pair;
 
 // Creating a shortcut for pair<int, pair<int, int>> type
 typedef pair<double, pair<int, int> > pPair;
+vector<pathStore> vecPath;
 
 // A structure to hold the neccesary parameters
 struct cell
@@ -73,7 +77,7 @@ bool isDestination(int row, int col, Pair dest)
 double calculateHValue(int row, int col, Pair src, Pair dest)
 {
     double dx1,dy1,dx2,dy2,cross,heuristic = 0;
-    if(map[row][col] == 3) {
+    if(map1[row][col] == 3) {
         heuristic = 1000;
         return heuristic;
     }
@@ -99,7 +103,7 @@ double calculateHValue(int row, int col, Pair src, Pair dest)
 
 // A Utility Function to trace the path from the source
 // to destination
-void tracePath(cell **cellDetails, Pair dest)
+vector<pathStore> trace(cell **cellDetails, Pair dest)
 {
     printf("\nThe Path is ");
     int row = dest.first;
@@ -119,7 +123,7 @@ void tracePath(cell **cellDetails, Pair dest)
 
   
     vector<pathTemp> vecTemp;
-    vector<pathStore> vecPath;
+    
     
 
     Path.push(make_pair(row, col));
@@ -148,27 +152,27 @@ void tracePath(cell **cellDetails, Pair dest)
         }
         cout << endl;
 
-    return;
+    return vecPath;
 }
 
 
-//Utility function to map the data into the graph
+//Utility function to map1 the data into the graph
 void checkNeighbours(int row, int col){
     int rneigh,cneigh,i,j;
-    int row_max = map.size();
-    int col_max = map[0].size();
+    int row_max = map1.size();
+    int col_max = map1[0].size();
     i = (row*W)+col;
     if (isValid(row-1,col, row_max, col_max) == true){
         rneigh = row-1;
         cneigh = col;
         j = (rneigh*W)+cneigh;
-        if(map[row-1][col] == 3 || map[row][col] == 3){
+        if(map1[row-1][col] == 3 || map1[row][col] == 3){
             graph[i][j] = 3;
         }
-        else if(map[row-1][col] == -1 || map[row][col] == -1){
+        else if(map1[row-1][col] == -1 || map1[row][col] == -1){
             graph[i][j] = 50; 
         }
-        else if(map[row-1][col] == 0 || map[row][col] == 0){
+        else if(map1[row-1][col] == 0 || map1[row][col] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -180,14 +184,14 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col;
         j = (rneigh*W)+cneigh;   
-        if(map[row+1][col] == 3 || map[row][col] == 3){
+        if(map1[row+1][col] == 3 || map1[row][col] == 3){
             graph[i][j] = 3;
      
         }
-        else if(map[row+1][col] == -1 || map[row][col] == -1){
+        else if(map1[row+1][col] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map[row+1][col] == 0){
+        else if(map1[row+1][col] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -200,13 +204,13 @@ void checkNeighbours(int row, int col){
         cneigh = col+1; 
         rneigh = row;
         j = (rneigh*W)+cneigh;
-        if(map[row][col+1] == 3 || map[row][col] == 3){
+        if(map1[row][col+1] == 3 || map1[row][col] == 3){
             graph[i][j] = 3;
         }
-        else if(map[row][col+1] == -1 || map[row][col] == -1){
+        else if(map1[row][col+1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;   
         }
-        else if(map[row][col+1] == 0){
+        else if(map1[row][col+1] == 0){
             graph[i][j] = 1;   
         }
         else{
@@ -218,14 +222,14 @@ void checkNeighbours(int row, int col){
         rneigh = row;
         j = (rneigh*W)+cneigh;
       
-        if(map[row][col-1] == 3 || map[row][col] == 3){
+        if(map1[row][col-1] == 3 || map1[row][col] == 3){
             graph[i][j] = 3;
            
         }
-        else if(map[row][col-1] == -1 || map[row][col] == -1){
+        else if(map1[row][col-1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map[row][col-1] == 0){
+        else if(map1[row][col-1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -237,13 +241,13 @@ void checkNeighbours(int row, int col){
         cneigh = col+1; 
         j = (rneigh*W)+cneigh;
    
-        if(map[row-1][col+1] == 3 || map[row][col] == 3){
+        if(map1[row-1][col+1] == 3 || map1[row][col] == 3){
             graph[i][j] = 3;
         }
-        else if(map[row-1][col+1] == -1 || map[row][col] == -1){
+        else if(map1[row-1][col+1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map[row-1][col+1] == 0){
+        else if(map1[row-1][col+1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -255,15 +259,15 @@ void checkNeighbours(int row, int col){
         rneigh = row-1;
         cneigh = col-1; 
         j = (rneigh*W)+cneigh;
-        if(map[row-1][col-1] == 3 || map[row][col] == 3){
+        if(map1[row-1][col-1] == 3 || map1[row][col] == 3){
             graph[i][j] = 3;
         
         }
-        else if(map[row-1][col-1] == -1 || map[row][col] == -1){
+        else if(map1[row-1][col-1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
       
         }
-        else if(map[row-1][col-1] == 0){
+        else if(map1[row-1][col-1] == 0){
             graph[i][j] = 1;
           
         }
@@ -275,13 +279,13 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col+1; 
         j = (rneigh*W)+cneigh;
-        if(map[row+1][col+1] == 3 || map[row][col] == 3){
+        if(map1[row+1][col+1] == 3 || map1[row][col] == 3){
             graph[i][j] = 3;
         }
-        else if(map[row+1][col+1] == -1 || map[row][col] == -1){
+        else if(map1[row+1][col+1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map[row+1][col+1] == 0){
+        else if(map1[row+1][col+1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -292,13 +296,13 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col-1; 
         j = (rneigh*W)+cneigh;
-        if(map[row+1][col-1] == 3 || map[row][col] == 3){
+        if(map1[row+1][col-1] == 3 || map1[row][col] == 3){
             graph[i][j] = 3;
         }
-        else if(map[row+1][col-1] == -1 || map[row][col] == -1){
+        else if(map1[row+1][col-1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map[row+1][col-1] == 0){
+        else if(map1[row+1][col-1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -313,8 +317,8 @@ void checkNeighbours(int row, int col){
 // to A* Search Algorithm
 void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
 {
-    int row_max = map.size();
-    int col_max = map[0].size();
+    int row_max = map1.size();
+    int col_max = map1[0].size();
     // If the source is out of range
     if (isValid(src.first, src.second, row_max,col_max) == false)
     {
@@ -423,7 +427,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                 cellDetails[i - 1][j].parent_i = i;
                 cellDetails[i - 1][j].parent_j = j;
                 printf("The destination cell is found\n");
-                tracePath(cellDetails, dest);
+                vecPath = trace(cellDetails, dest);
                 foundDest = true;
                 return;
             }
@@ -472,7 +476,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                 cellDetails[i + 1][j].parent_i = i;
                 cellDetails[i + 1][j].parent_j = j;
                 printf("The destination cell is found\n");
-                tracePath(cellDetails, dest);
+                vecPath = trace(cellDetails, dest);
                 foundDest = true;
                 return;
             }
@@ -511,7 +515,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                 cellDetails[i][j + 1].parent_i = i;
                 cellDetails[i][j + 1].parent_j = j;
                 printf("The destination cell is found\n");
-                tracePath(cellDetails, dest);
+            vecPath = trace(cellDetails, dest);
                 foundDest = true;
                 return;
             }
@@ -552,7 +556,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                 cellDetails[i][j - 1].parent_i = i;
                 cellDetails[i][j - 1].parent_j = j;
                 printf("The destination cell is found\n");
-                tracePath(cellDetails, dest);
+            vecPath = trace(cellDetails, dest);
                 foundDest = true;
                 return;
             }
@@ -594,7 +598,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                 cellDetails[i - 1][j + 1].parent_i = i;
                 cellDetails[i - 1][j + 1].parent_j = j;
                 printf("The destination cell is found\n");
-                tracePath(cellDetails, dest);
+                vecPath = trace(cellDetails, dest);
                 foundDest = true;
                 return;
             }
@@ -635,7 +639,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                 cellDetails[i - 1][j - 1].parent_i = i;
                 cellDetails[i - 1][j - 1].parent_j = j;
                 printf("The destination cell is found\n");
-                tracePath(cellDetails, dest);
+                vecPath = trace(cellDetails, dest);
                 foundDest = true;
                 return;
             }
@@ -674,7 +678,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                 cellDetails[i + 1][j + 1].parent_i = i;
                 cellDetails[i + 1][j + 1].parent_j = j;
                 printf("The destination cell is found\n");
-                tracePath(cellDetails, dest);
+                vecPath = trace(cellDetails, dest);
                 foundDest = true;
                 return;
             }
@@ -714,7 +718,7 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
                 cellDetails[i + 1][j - 1].parent_i = i;
                 cellDetails[i + 1][j - 1].parent_j = j;
                 printf("The destination cell is found\n");
-                tracePath(cellDetails, dest);
+                vecPath = trace(cellDetails, dest);
                 foundDest = true;
                 return;
             }
@@ -782,7 +786,8 @@ int main()
     std::string line;
     std::getline(file, line);
     cout << "c" << endl;
-    // if (!file.good())   /////GET THIS PART CHECK ??
+  
+    // if (!file.good())   
     //     return -1;
     cout << "d" << endl;
     std::stringstream iss(line);
@@ -801,14 +806,14 @@ int main()
             convertor >> temp_int;
             tmp.push_back(temp_int);   
         }
-        map.push_back(tmp);
+        map1.push_back(tmp);
     }
 
     file.close();
   
-  for(int i =0; i < map.size(); i++){
-        for(int j=0; j<map[i].size();j++){
-            cout << map[i][j] << "\t";
+  for(int i =0; i < map1.size(); i++){
+        for(int j=0; j<map1[i].size();j++){
+            cout << map1[i][j] << "\t";
         }
         cout << endl;
     }
@@ -827,9 +832,8 @@ int main()
     cout << endl;
     cout << "+++ PRINTING GRAPH +++" << endl;
     cout << endl;
-    printGraph();
+    // printGraph();
  
-
     // // Source is the left-most bottom-most corner
      Pair src = make_pair(120, 120);
 
@@ -838,8 +842,36 @@ int main()
     cout << endl;
     cout << "+++ COMPUTING ASTAR SOLUTION +++" << endl;
     cout << endl;
-
     aStar(graph, src, dest);
+    
+
+    YAML::Emitter yaml_out;
+    yaml_out << YAML::BeginMap;
+    yaml_out << YAML::Key << "waypoint";
+    yaml_out << YAML::Value << YAML::BeginSeq ;
+    for(int i =0; i<vecPath.size();i++)
+    {
+        yaml_out << YAML::BeginMap;    
+        yaml_out << YAML::Key <<"position";
+        yaml_out << YAML::Value << YAML::BeginMap;
+        yaml_out << YAML::Key << "x";
+        yaml_out << YAML::Value << vecPath[i].first;
+        yaml_out << YAML::Key << "y";
+        yaml_out << YAML::Value << vecPath[i].second;
+        yaml_out << YAML::EndMap;
+        yaml_out << YAML::EndMap;
+    }                   
+    yaml_out << YAML::EndSeq;
+    yaml_out << YAML::EndMap;
+    cout << "Here's the output YAML:\n" << yaml_out.c_str();
+    
     cout << endl;
-    return (0);
+
+    ofstream inFile;
+    inFile.open("yamldata.yaml");
+    inFile << yaml_out.c_str();
+
+    inFile.close();
+    return 0;
+
 }

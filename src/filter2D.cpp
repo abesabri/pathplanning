@@ -18,7 +18,7 @@ int main ( int argc, char** argv )
 {
     ifstream inFile;
     string strFileName = "new.txt";
-    float V[132492];
+    float V[1];
     
     readFile(strFileName, V, inFile);
   
