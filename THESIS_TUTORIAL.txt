@@ -1,0 +1,19 @@
+
+#INITIALIZATION
+roslaunch dexrov_meta startup_simulation.launch
+roslaunch dexrov_meta startup_vehicle_sim.launch
+roslaunch dexrov_meta startup_vessel_sim.launch
+#in case joystick is not working
+rosrun joy joy_node _dev:=/dev/input/js1
+
+#PREPARE FOR WAYPOINTS
+# Waypoints to be specified as
+# <arg name="config_filename" default="$(find abrish)/config/waypoints_circle.yaml"/>
+# in navigate_path.launch
+roslaunch abrish navigate_path.launch
+
+#OPTIONAL FOR VISUALIZATION
+roslaunch dexrov_meta rviz.launch
+roslaunch dexrov_meta perception_octomap.launch
+
+
