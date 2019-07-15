@@ -12,6 +12,8 @@
 #include <vector>
 #include <iomanip>
 #include "yaml-cpp/yaml.h"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/highgui/highgui.hpp"
 
 
 using namespace std;
@@ -109,7 +111,7 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
     int row = dest.first;
     int col = dest.second;
     double x,y;
-
+    int m,n;
     stack<Pair> Path;
 
     while (!(cellDetails[row][col].parent_i == row && cellDetails[row][col].parent_j == col))
@@ -150,6 +152,21 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
             cout << fixed << setprecision(20)<< vecPath[i].first << " " <<fixed << setprecision(20)<< vecPath[i].second << " " << endl;
         }
         cout << endl;
+    
+    Mat imgmat = imread("map_image.jpg");
+    Vec3b color;
+    color[0] = 0;
+    color[1] = 255;
+    color[2] = 0;
+
+    for(int i =0; i< vecTemp.size();i++){
+        m = (vecTemp[i].second)*3;
+        n = (vecTemp[i].first)*3;
+        imgmat.at(<int>(m,n)) = color;
+    }
+    
+    imshow("window",imgmat);
+    waitKey(0);
 
     return vecPath;
 }
