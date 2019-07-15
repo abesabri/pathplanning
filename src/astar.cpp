@@ -844,9 +844,9 @@ int main()
         yaml_out << YAML::Key <<"position";
         yaml_out << YAML::Value << YAML::BeginMap;
         yaml_out << YAML::Key << "x";
-        yaml_out << YAML::Value << vecPath[i].first;
+        yaml_out << YAML::Value << (vecPath[i].first)*3;
         yaml_out << YAML::Key << "y";
-        yaml_out << YAML::Value << vecPath[i].second;
+        yaml_out << YAML::Value << (vecPath[i].second)*3;
         yaml_out << YAML::Key << "z";
         yaml_out << YAML::Value << "3.0";
         yaml_out << YAML::EndMap;
