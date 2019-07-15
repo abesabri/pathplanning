@@ -137,12 +137,13 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
 
     for(int i=0; i<vecTemp.size(); i++){
 
-        x = (vecTemp[i].first)*resolution*3;
-        y = (vecTemp[i].second)*resolution*3;
-        y = y-7;
-        x = x-32;
+        x = (vecTemp[i].second)*-1;
+        x = x*resolution*3;
+        y = (vecTemp[i].first)*resolution*3;
+        x = x+15; 
+        y = y-15;
         //y = y*resolution;
-        vecPath.push_back(make_pair(y,x));
+        vecPath.push_back(make_pair(x,y));
     }
         cout << "\nPath in resolution" << endl;
         for(int i =0; i<vecPath.size();i++){
