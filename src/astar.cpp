@@ -121,10 +121,7 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
         col = temp_col;
     }
 
-  
     vector<pathTemp> vecTemp;
-    
-    
 
     Path.push(make_pair(row, col));
     while (!Path.empty())
@@ -780,19 +777,12 @@ int main()
     ifstream file("new.txt");
     H = 122;
     W = 121;
-    cout << "a" << endl;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
-    cout << "b" << endl;
     std::string line;
     std::getline(file, line);
-    cout << "c" << endl;
-  
-    // if (!file.good())   
+    // if (!file.good())   ///CHECK THIS OUT
     //     return -1;
-    cout << "d" << endl;
     std::stringstream iss(line);
-       cout << "e" << endl;
-    //vector<int> tmp;
     for(int row = 0; row < H; ++row){
         vector<int> tmp;
         for (int col = 0; col < W; ++col)
@@ -832,10 +822,10 @@ int main()
     cout << endl;
     cout << "+++ PRINTING GRAPH +++" << endl;
     cout << endl;
-    // printGraph();
+    //printGraph();
  
     // // Source is the left-most bottom-most corner
-     Pair src = make_pair(120, 120);
+    Pair src = make_pair(120, 120);
 
     // // Destination is the left-most top-most corner
     Pair dest = make_pair(10,10);
@@ -844,7 +834,6 @@ int main()
     cout << endl;
     aStar(graph, src, dest);
     
-
     YAML::Emitter yaml_out;
     yaml_out << YAML::BeginMap;
     yaml_out << YAML::Key << "waypoint";
@@ -858,6 +847,19 @@ int main()
         yaml_out << YAML::Value << vecPath[i].first;
         yaml_out << YAML::Key << "y";
         yaml_out << YAML::Value << vecPath[i].second;
+        yaml_out << YAML::Key << "z";
+        yaml_out << YAML::Value << "3.0";
+        yaml_out << YAML::EndMap;
+        yaml_out << YAML::Key << "orientation";
+        yaml_out << YAML::Value << YAML::BeginMap;
+        yaml_out << YAML::Key << "x";
+        yaml_out << YAML::Value << "0.0444210774910485";
+        yaml_out << YAML::Key << "y";
+        yaml_out << YAML::Value << "-0.03997364552703113";
+        yaml_out << YAML::Key << "z";
+        yaml_out << YAML::Value << "0.7459565426241741";
+        yaml_out << YAML::Key << "w";
+        yaml_out << YAML::Value << "0.66330815768691";
         yaml_out << YAML::EndMap;
         yaml_out << YAML::EndMap;
     }                   
@@ -868,10 +870,9 @@ int main()
     cout << endl;
 
     ofstream inFile;
-    inFile.open("yamldata.yaml");
+    inFile.open("yamlastardata.yaml");
     inFile << yaml_out.c_str();
 
     inFile.close();
     return 0;
-
 }

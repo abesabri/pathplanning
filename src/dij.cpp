@@ -9,6 +9,7 @@
 #include <sstream>
 #include <vector>
 #include <iomanip>
+#include "yaml-cpp/yaml.h"
 
 using namespace std;
 
@@ -16,7 +17,7 @@ using namespace std;
 double resolution = 0.0500000007451;
 //Arrays to map 1D into 2D
 int H ,W;
-vector<vector<int> > map;
+vector<vector<int> > map1;
 vector<vector<int> > graph;
 //vectors to store path
 vector<vector<int> >v1;
@@ -32,20 +33,20 @@ bool isValid(int row, int col, int row_max, int col_max)
 
 void checkNeighbours(int row, int col){
     int rneigh,cneigh,i,j;
-    int row_max = map.size();
-    int col_max = map[0].size();
+    int row_max = map1.size();
+    int col_max = map1[0].size();
     i = (row*(W)+col);
     if (isValid(row-1,col, row_max, col_max) == true){
         rneigh = row-1;
         cneigh = col;
         j = (rneigh*W)+cneigh;
-        if(map[row-1][col] == 100 || map[row][col] == 100){
+        if(map1[row-1][col] == 100 || map1[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map[row-1][col] == -1 || map[row][col] == -1){
+        else if(map1[row-1][col] == -1 || map1[row][col] == -1){
             graph[i][j] = 50; 
         }
-        else if(map[row-1][col] == 0 || map[row][col] == 0){
+        else if(map1[row-1][col] == 0 || map1[row][col] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -57,13 +58,13 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col;
         j = (rneigh*W)+cneigh;   
-        if(map[row+1][col] == 100 || map[row][col] == 100){
+        if(map1[row+1][col] == 100 || map1[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map[row+1][col] == -1 || map[row][col] == -1){
+        else if(map1[row+1][col] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map[row+1][col] == 0){
+        else if(map1[row+1][col] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -76,13 +77,13 @@ void checkNeighbours(int row, int col){
         cneigh = col+1; 
         rneigh = row;
         j = (rneigh*W)+cneigh;
-        if(map[row][col+1] == 100 || map[row][col] == 100){
+        if(map1[row][col+1] == 100 || map1[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map[row][col+1] == -1 || map[row][col] == -1){
+        else if(map1[row][col+1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map[row][col+1] == 0){
+        else if(map1[row][col+1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -93,13 +94,13 @@ void checkNeighbours(int row, int col){
         cneigh = col-1; 
         rneigh = row;
         j = (rneigh*W)+cneigh;
-        if(map[row][col-1] == 100 || map[row][col] == 100){
+        if(map1[row][col-1] == 100 || map1[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map[row][col-1] == -1 || map[row][col] == -1){
+        else if(map1[row][col-1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map[row][col-1] == 0){
+        else if(map1[row][col-1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -110,13 +111,13 @@ void checkNeighbours(int row, int col){
         rneigh = row-1;
         cneigh = col+1; 
         j = (rneigh*W)+cneigh;
-        if(map[row-1][col+1] == 100 || map[row][col] == 100){
+        if(map1[row-1][col+1] == 100 || map1[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map[row-1][col+1] == -1 || map[row][col] == -1){
+        else if(map1[row-1][col+1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map[row-1][col+1] == 0){
+        else if(map1[row-1][col+1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -127,13 +128,13 @@ void checkNeighbours(int row, int col){
         rneigh = row-1;
         cneigh = col-1; 
         j = (rneigh*W)+cneigh;
-        if(map[row-1][col-1] == 100 || map[row][col] == 100){
+        if(map1[row-1][col-1] == 100 || map1[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map[row-1][col-1] == -1 || map[row][col] == -1){
+        else if(map1[row-1][col-1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map[row-1][col-1] == 0){
+        else if(map1[row-1][col-1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -144,13 +145,13 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col+1; 
         j = (rneigh*(W))+cneigh;
-        if(map[row+1][col+1] == 100 || map[row][col] == 100){
+        if(map1[row+1][col+1] == 100 || map1[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map[row+1][col+1] == -1 || map[row][col] == -1){
+        else if(map1[row+1][col+1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map[row+1][col+1] == 0){
+        else if(map1[row+1][col+1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -161,13 +162,13 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col-1; 
         j = (rneigh*W)+cneigh;
-        if(map[row+1][col-1] == 100 || map[row][col] == 100){
+        if(map1[row+1][col-1] == 100 || map1[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map[row+1][col-1] == -1 || map[row][col] == -1){
+        else if(map1[row+1][col-1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map[row+1][col-1] == 0){
+        else if(map1[row+1][col-1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -298,48 +299,45 @@ void dijkstra(vector<vector<int> > &graph, int src)
 // Driver Code 
 int main() 
 { 
-    std::ifstream file("num.txt");
-    H = 150;
-    W = 150;
+    std::ifstream file("new.txt");
+    H = 122;
+    W = 121;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
     //int mapt[H][W];
     //for(int row = 0; row < H; ++row){
-    cout << "+++ READING FILE +++" << endl;
+    
     std::string line;
-    //std::getline(file, line);
-    //if (!file.good())
-    //    return -1;
+    std::getline(file, line);
+    if (!file.good())
+       return -1;
 
-    //std::stringstream iss(line);
-    //cout << "+++ READING FILE 2 +++" << endl;
+    std::stringstream iss(line);
 
-    //vector<int> tmp;
-    // for(int row = 0; row < H; ++row){
-    //     vector<int> tmp;
-    //     for (int col = 0; col < W; ++col)
-    //     {
-    //         int temp_int;
-    //         std::string val;
-    //         std::getline(iss, val, ',');
-    //         if ( !iss.good() )
-    //             break;
-    //         std::stringstream convertor(val);
-    //         convertor >> temp_int;
-    //         tmp.push_back(temp_int);   
-    //     }
-    //     map.push_back(tmp);
-    //     tmp.clear();
-    //     tmp.~vector();
-    // }
+    for(int row = 0; row < H; ++row){
+        vector<int> tmp;
+        for (int col = 0; col < W; ++col)
+        {
+            int temp_int;
+            std::string val;
+            std::getline(iss, val, ',');
+            if ( !iss.good() )
+                break;
+            std::stringstream convertor(val);
+            convertor >> temp_int;
+            tmp.push_back(temp_int);   
+        }
+        map1.push_back(tmp);
+    }
 
-    //ARTURO: It is important that you always close files, for memory security reasons.
-    //Perhaps 95% of cases nothing will happen, but it can cause Segmentation Fault errors
     file.close();
-    cout << "+++ FILE WAS READ CORRECTLY +++" << endl;
 
-    //ARTURO: I recommend to leave comments like this after each sstep of the process
-    //To make it easier to debug when something goes wrong
-    /*
+    for(int i =0; i < map1.size(); i++){
+        for(int j=0; j<map1[i].size();j++){
+            cout << map1[i][j] << "\t";
+        }
+        cout << endl;
+    }
+
     cout << endl;
     cout << "+++ FILE WAS READ CORRECTLY +++" << endl;
     cout << endl;
@@ -353,7 +351,7 @@ int main()
     cout << endl;
     cout << "+++ PRINTING GRAPH +++" << endl;
     cout << endl;
-    printGraph();
+    //printGraph();
 
     cout << endl;
     cout << "+++ COMPUTING DIJKSTRA SOLUTION +++" << endl;
@@ -371,6 +369,38 @@ int main()
         }
         cout << endl;
     }
-    cout << endl;*/
+    cout << endl;
+
+    // YAML::Emitter yaml_out;
+    // yaml_out << YAML::BeginMap;
+    // yaml_out << YAML::Key << "waypoint";
+    // yaml_out << YAML::Value << YAML::BeginSeq ;
+    // for(int i =0; i<v2.size();i++)
+    // {
+    //     for(int j=0; j<v2[i].size();j++)
+    //     {
+    //         yaml_out << YAML::BeginMap;    
+    //         yaml_out << YAML::Key <<"position";
+    //         yaml_out << YAML::Value << YAML::BeginMap;
+    //         yaml_out << YAML::Key << "x";
+    //         yaml_out << YAML::Value << v2[i].first;
+    //         yaml_out << YAML::Key << "y";
+    //         yaml_out << YAML::Value << v2[i].second;
+    //         yaml_out << YAML::EndMap;
+    //         yaml_out << YAML::EndMap;
+    //     }
+        
+    // }                   
+    // yaml_out << YAML::EndSeq;
+    // yaml_out << YAML::EndMap;
+    // cout << "Here's the output YAML:\n" << yaml_out.c_str();
+    
+    // cout << endl;
+
+    // ofstream inFile;
+    // inFile.open("yamldijdata.yaml");
+    // inFile << yaml_out.c_str();
+
+    // inFile.close();    
     return 0; 
 } 
