@@ -137,10 +137,11 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
 
     for(int i=0; i<vecTemp.size(); i++){
 
-        x = (vecTemp[i].first)%W;
-        y = (vecTemp[i].second)/W;
-        x = x*resolution;
-        y = y*resolution;
+        x = (vecTemp[i].first)*resolution*3;
+        y = (vecTemp[i].second)*resolution*3;
+        y = y-7;
+        x = x-32;
+        //y = y*resolution;
         vecPath.push_back(make_pair(y,x));
     }
         cout << "\nPath in resolution" << endl;
@@ -844,11 +845,11 @@ int main()
         yaml_out << YAML::Key <<"position";
         yaml_out << YAML::Value << YAML::BeginMap;
         yaml_out << YAML::Key << "x";
-        yaml_out << YAML::Value << (vecPath[i].first)*3;
+        yaml_out << YAML::Value << vecPath[i].first;
         yaml_out << YAML::Key << "y";
-        yaml_out << YAML::Value << (vecPath[i].second)*3;
+        yaml_out << YAML::Value << vecPath[i].second;
         yaml_out << YAML::Key << "z";
-        yaml_out << YAML::Value << "3.0";
+        yaml_out << YAML::Value << "4.5";
         yaml_out << YAML::EndMap;
         yaml_out << YAML::Key << "orientation";
         yaml_out << YAML::Value << YAML::BeginMap;
