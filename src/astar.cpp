@@ -870,7 +870,7 @@ int main()
     cout << endl;
 
     ofstream inFile;
-    inFile.open("yamlastardata.yaml");
+    inFile.open("../config/yamlastardata.yaml");
     inFile << yaml_out.c_str();
 
     inFile.close();
