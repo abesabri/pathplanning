@@ -17,17 +17,24 @@ void readFile(string, float[], ifstream &);
 int main ( int argc, char** argv )
 {
     ifstream inFile;
-    string strFileName = "new.txt";
-    float V[1];
+    string strFileName = "num2.txt";
+    int r = 366, c = 362;
+    float V[r*c];
     
     readFile(strFileName, V, inFile);
-  
+
+    //int r = 366, c = 362;
+    //Mat1d M(r,c,CV_32FC1);
+    //Mat1d dsrc(CV_32FC1,CV_32FC1);
+    //Mat1d copy_1 = Mat(dsrc.rows, dsrc.cols, CV_32F, V.data()).clone();
+    //memcpy(M.data,V.data(),V.size()*sizeof(float));
+
     //Copying vector to Mat
-    int r = 1, c = 10;
+    //int r = 366, c = 362;
     Mat M(r,c,CV_32FC1,V);
 
     /// Declare variables  
-    Mat intMat = Mat::zeros(cv::Size(r,c),CV_8UC1); 
+    Mat intMat; 
     Mat dst;
     Mat kernel;
     Point anchor;
@@ -57,45 +64,37 @@ int main ( int argc, char** argv )
     cout << "min: " << minVal << endl;
     cout << "max: " << maxVal << endl;
     if (minVal!=maxVal){
-        dst.convertTo(intMat,CV_8UC1,255.0/(maxVal-minVal),-255.0*minVal/(maxVal-minVal));
+        M.convertTo(intMat,CV_8U,255.0/(maxVal-minVal),-255.0*minVal/(maxVal-minVal));
     }
     
+    Mat map;
+    M.convertTo(map,CV_8U,255.0/(maxVal-minVal),-255.0*minVal/(maxVal-minVal));
     //Loop to display values and see if they are correct
-    for(int i = 0; i < intMat.rows; i++){
+    //Loop to display values and see if they are correct
+    cout << "Dims M " << M.rows << " " << M.cols << endl;
+    for(int i = 0; i < M.rows; i++){
+        for(int j = 0; j < M.cols; j++){
+            std::cout << int(M.at<float>(i,j)) << " ";
+        }
+        std::cout << std::endl;
+    }
+    /*for(int i = 0; i < intMat.rows; i++){
         for(int j = 0; j < intMat.cols; j++){
             std::cout << int(intMat.at<uchar>(i,j)) << " ";
         }
         std::cout << std::endl;
-    }
+    }*/
 
-// int sum;
-
-//      for(int i=kernel_size/2; i < intMat.rows; i+=kernel_size)
-//      {
-//          for(int j=kernel_size/2; j < intMat.cols; j+=kernel_size)
-//          {
-//              sum += intMat.at<double>(i,j);
-//          }
-//     }
-        
-
-    //Dummy Mat -- it can be used it with imshow to see that imshow works
-    //Mat test = Mat::zeros(cv::Size(400,300),CV_8UC3);
-    //imshow("t",test);
-    namedWindow("result",WINDOW_NORMAL);
-    //resizeWindow("result",400,300);
-    imshow("result",intMat);
-    //A waitKey must be included to keep the image window open until a key is pressed
-    //Otherwise the windows appears and disappears to quickly for it to be seen
+    imshow("t",map);
+    imwrite("map_image.jpg",map);
     waitKey(0);
-    
 
 return 0;
 
 }
 
 void readFile(string strFile, float v[], ifstream &iFile){
-    iFile.open(strFile);
+    iFile.open(strFile.c_str());
     if(!iFile){
         cout << "Error opening file" << endl;
         system("pause");
