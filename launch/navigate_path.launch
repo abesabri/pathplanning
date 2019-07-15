@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <launch>
     
-    <arg name="config_filename" default="$(find abrish)/config/waypoints_circle.yaml"/>
+    <!--arg name="config_filename" default="$(find abrish)/config/waypoints_circle.yaml"/-->
+    <arg name="config_filename" default="$(find abrish)/config/yamlastardata.yaml"/>
+
   
     <node pkg="dexrov_waypoint_navigator" type="dexrov_waypoint_navigator.py" name="dexrov_waypoint_navigator" output="screen" >
         <param name="config_filename" type="str" value="$(arg config_filename)" />
