@@ -826,10 +826,10 @@ int main()
     //printGraph();
  
     // // Source is the left-most bottom-most corner
-    Pair src = make_pair(120, 120);
+    Pair src = make_pair(10, 10);
 
     // // Destination is the left-most top-most corner
-    Pair dest = make_pair(10,10);
+    Pair dest = make_pair(120,120);
     cout << endl;
     cout << "+++ COMPUTING ASTAR SOLUTION +++" << endl;
     cout << endl;
@@ -837,7 +837,7 @@ int main()
     
     YAML::Emitter yaml_out;
     yaml_out << YAML::BeginMap;
-    yaml_out << YAML::Key << "waypoint";
+    yaml_out << YAML::Key << "waypoints";
     yaml_out << YAML::Value << YAML::BeginSeq ;
     for(int i =0; i<vecPath.size();i++)
     {

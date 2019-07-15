@@ -231,10 +231,10 @@ void Path2D(vector<vector<int> >&v1,vector<vector<pair<double,double> > >&v) {
     for(int i=0; i<v1.size();i++){
         vector<pair<double,double> > tmp;
         for(int j=0; j<v1[i].size();j++){
-            x = (v1[i][j])%W;
-            y = (v1[i][j])/W;
-            x = x*resolution;
-            y = y*resolution;
+            x = (v1[i][j])*resolution*3;
+            y = (v1[i][j])*resolution*3;
+            x = x-32;
+            y = y-7;
             tmp.push_back(make_pair(y,x));
         }
         v.push_back(tmp);
@@ -371,49 +371,49 @@ int main()
     }
     cout << endl;
 
-    YAML::Emitter yaml_out;
-    yaml_out << YAML::BeginMap;
-    yaml_out << YAML::Key << "waypoint";
-    yaml_out << YAML::Value << YAML::BeginSeq ;
-    for(int i =0; i<v2.size();i++)
-    {
-        for(int j=0; j<v2[i].size();j++)
-        {
-            yaml_out << YAML::BeginMap;    
-            yaml_out << YAML::Key <<"position";
-            yaml_out << YAML::Value << YAML::BeginMap;
-            yaml_out << YAML::Key << "x";
-            yaml_out << YAML::Value << (v2[i].first)*3; 
-            yaml_out << YAML::Key << "y";
-            yaml_out << YAML::Value << (v2[i].second)*3;
-            yaml_out << YAML::Key << "z";
-            yaml_out << YAML::Value << "3.0";
-            yaml_out << YAML::EndMap;
-            yaml_out << YAML::Key << "orientation";
-            yaml_out << YAML::Value << YAML::BeginMap;
-            yaml_out << YAML::Key << "x";
-            yaml_out << YAML::Value << "0.0444210774910485";
-            yaml_out << YAML::Key << "y";
-            yaml_out << YAML::Value << "-0.03997364552703113";
-            yaml_out << YAML::Key << "z";
-            yaml_out << YAML::Value << "0.7459565426241741";
-            yaml_out << YAML::Key << "w";
-            yaml_out << YAML::Value << "0.66330815768691";
-            yaml_out << YAML::EndMap;
-            yaml_out << YAML::EndMap;
-        }
+    // YAML::Emitter yaml_out;
+    // yaml_out << YAML::BeginMap;
+    // yaml_out << YAML::Key << "waypoints";
+    // yaml_out << YAML::Value << YAML::BeginSeq ;
+    // for(int i =0; i<v2.size();i++)
+    // {
+    //     for(int j=0; j<v2[i].size();j++)
+    //     {
+    //         yaml_out << YAML::BeginMap;    
+    //         yaml_out << YAML::Key <<"position";
+    //         yaml_out << YAML::Value << YAML::BeginMap;
+    //         yaml_out << YAML::Key << "x";
+    //         yaml_out << YAML::Value << v2[i].first; 
+    //         yaml_out << YAML::Key << "y";
+    //         yaml_out << YAML::Value << v2[i].second;
+    //         yaml_out << YAML::Key << "z";
+    //         yaml_out << YAML::Value << "4.5";
+    //         yaml_out << YAML::EndMap;
+    //         yaml_out << YAML::Key << "orientation";
+    //         yaml_out << YAML::Value << YAML::BeginMap;
+    //         yaml_out << YAML::Key << "x";
+    //         yaml_out << YAML::Value << "0.0444210774910485";
+    //         yaml_out << YAML::Key << "y";
+    //         yaml_out << YAML::Value << "-0.03997364552703113";
+    //         yaml_out << YAML::Key << "z";
+    //         yaml_out << YAML::Value << "0.7459565426241741";
+    //         yaml_out << YAML::Key << "w";
+    //         yaml_out << YAML::Value << "0.66330815768691";
+    //         yaml_out << YAML::EndMap;
+    //         yaml_out << YAML::EndMap;
+    //     }
         
-    }                   
-    yaml_out << YAML::EndSeq;
-    yaml_out << YAML::EndMap;
-    cout << "Here's the output YAML:\n" << yaml_out.c_str();
+    // }                   
+    // yaml_out << YAML::EndSeq;
+    // yaml_out << YAML::EndMap;
+    // cout << "Here's the output YAML:\n" << yaml_out.c_str();
     
-    cout << endl;
+    // cout << endl;
 
-    ofstream inFile;
-    inFile.open("yamldijdata.yaml");
-    inFile << yaml_out.c_str();
+    // ofstream inFile;
+    // inFile.open("../config/yamldijdata.yaml");
+    // inFile << yaml_out.c_str();
 
-    inFile.close();    
+    // inFile.close();    
     return 0; 
 } 
