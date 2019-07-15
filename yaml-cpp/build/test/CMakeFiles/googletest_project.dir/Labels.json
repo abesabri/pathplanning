@@ -1,0 +1,51 @@
+
+{
+	"sources" : 
+	[
+		
+		{
+			"file" : "/Users/abrish/desktop/pathplanning/yaml-cpp/build/test/CMakeFiles/googletest_project"
+		},
+		
+		{
+			"file" : "/Users/abrish/desktop/pathplanning/yaml-cpp/build/test/CMakeFiles/googletest_project.rule"
+		},
+		
+		{
+			"file" : "/Users/abrish/desktop/pathplanning/yaml-cpp/build/test/CMakeFiles/googletest_project-complete.rule"
+		},
+		
+		{
+			"file" : "/Users/abrish/desktop/pathplanning/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/googletest_project-install.rule"
+		},
+		
+		{
+			"file" : "/Users/abrish/desktop/pathplanning/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/googletest_project-mkdir.rule"
+		},
+		
+		{
+			"file" : "/Users/abrish/desktop/pathplanning/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/googletest_project-download.rule"
+		},
+		
+		{
+			"file" : "/Users/abrish/desktop/pathplanning/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/googletest_project-update.rule"
+		},
+		
+		{
+			"file" : "/Users/abrish/desktop/pathplanning/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/googletest_project-patch.rule"
+		},
+		
+		{
+			"file" : "/Users/abrish/desktop/pathplanning/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/googletest_project-configure.rule"
+		},
+		
+		{
+			"file" : "/Users/abrish/desktop/pathplanning/yaml-cpp/build/test/googletest_project-prefix/src/googletest_project-stamp/googletest_project-build.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : [ "googletest_project" ],
+		"name" : "googletest_project"
+	}
+}
