@@ -15,8 +15,11 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 
-
 using namespace std;
+using namespace cv;
+
+#define KERNEL_SIZE 3
+#define ORIGIN_MAP 15
 
 typedef pair<int,int> pathTemp;
 typedef pair<double,double> pathStore;
@@ -140,10 +143,10 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
     for(int i=0; i<vecTemp.size(); i++){
 
         x = (vecTemp[i].second)*-1;
-        x = x*resolution*3;
-        y = (vecTemp[i].first)*resolution*3;
-        x = x+15; 
-        y = y-15;
+        x = x*resolution*KERNEL_SIZE;
+        y = (vecTemp[i].first)*resolution*KERNEL_SIZE;
+        x = x+ORIGIN_MAP; 
+        y = y-ORIGIN_MAP;
         //y = y*resolution;
         vecPath.push_back(make_pair(x,y));
     }
@@ -160,11 +163,11 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
     color[2] = 0;
 
     for(int i =0; i< vecTemp.size();i++){
-        m = (vecTemp[i].second)*3;
-        n = (vecTemp[i].first)*3;
-        imgmat.at(<int>(m,n)) = color;
+        m = (vecTemp[i].second)*KERNEL_SIZE;
+        n = (vecTemp[i].first)*KERNEL_SIZE;
+        imgmat.at<Vec3b>(Point(m,n)) = color;
     }
-    
+
     imshow("window",imgmat);
     waitKey(0);
 
@@ -794,13 +797,17 @@ void printGraph(){
 int main()
 {
     ifstream file("new.txt");
+    if (!file.good()) {
+        cout << "Bad file" << endl;
+        return -1;
+    }  
     H = 122;
     W = 121;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
     std::string line;
     std::getline(file, line);
-    // if (!file.good())   ///CHECK THIS OUT
-    //     return -1;
+   
+        
     std::stringstream iss(line);
     for(int row = 0; row < H; ++row){
         vector<int> tmp;
@@ -853,45 +860,45 @@ int main()
     cout << endl;
     aStar(graph, src, dest);
     
-    YAML::Emitter yaml_out;
-    yaml_out << YAML::BeginMap;
-    yaml_out << YAML::Key << "waypoints";
-    yaml_out << YAML::Value << YAML::BeginSeq ;
-    for(int i =0; i<vecPath.size();i++)
-    {
-        yaml_out << YAML::BeginMap;    
-        yaml_out << YAML::Key <<"position";
-        yaml_out << YAML::Value << YAML::BeginMap;
-        yaml_out << YAML::Key << "x";
-        yaml_out << YAML::Value << vecPath[i].first;
-        yaml_out << YAML::Key << "y";
-        yaml_out << YAML::Value << vecPath[i].second;
-        yaml_out << YAML::Key << "z";
-        yaml_out << YAML::Value << "4.5";
-        yaml_out << YAML::EndMap;
-        yaml_out << YAML::Key << "orientation";
-        yaml_out << YAML::Value << YAML::BeginMap;
-        yaml_out << YAML::Key << "x";
-        yaml_out << YAML::Value << "0.0444210774910485";
-        yaml_out << YAML::Key << "y";
-        yaml_out << YAML::Value << "-0.03997364552703113";
-        yaml_out << YAML::Key << "z";
-        yaml_out << YAML::Value << "0.7459565426241741";
-        yaml_out << YAML::Key << "w";
-        yaml_out << YAML::Value << "0.66330815768691";
-        yaml_out << YAML::EndMap;
-        yaml_out << YAML::EndMap;
-    }                   
-    yaml_out << YAML::EndSeq;
-    yaml_out << YAML::EndMap;
-    cout << "Here's the output YAML:\n" << yaml_out.c_str();
+    // YAML::Emitter yaml_out;
+    // yaml_out << YAML::BeginMap;
+    // yaml_out << YAML::Key << "waypoints";
+    // yaml_out << YAML::Value << YAML::BeginSeq ;
+    // for(int i =0; i<vecPath.size();i++)
+    // {
+    //     yaml_out << YAML::BeginMap;    
+    //     yaml_out << YAML::Key <<"position";
+    //     yaml_out << YAML::Value << YAML::BeginMap;
+    //     yaml_out << YAML::Key << "x";
+    //     yaml_out << YAML::Value << vecPath[i].first;
+    //     yaml_out << YAML::Key << "y";
+    //     yaml_out << YAML::Value << vecPath[i].second;
+    //     yaml_out << YAML::Key << "z";
+    //     yaml_out << YAML::Value << "4.5";
+    //     yaml_out << YAML::EndMap;
+    //     yaml_out << YAML::Key << "orientation";
+    //     yaml_out << YAML::Value << YAML::BeginMap;
+    //     yaml_out << YAML::Key << "x";
+    //     yaml_out << YAML::Value << "0.0444210774910485";
+    //     yaml_out << YAML::Key << "y";
+    //     yaml_out << YAML::Value << "-0.03997364552703113";
+    //     yaml_out << YAML::Key << "z";
+    //     yaml_out << YAML::Value << "0.7459565426241741";
+    //     yaml_out << YAML::Key << "w";
+    //     yaml_out << YAML::Value << "0.66330815768691";
+    //     yaml_out << YAML::EndMap;
+    //     yaml_out << YAML::EndMap;
+    // }                   
+    // yaml_out << YAML::EndSeq;
+    // yaml_out << YAML::EndMap;
+    // cout << "Here's the output YAML:\n" << yaml_out.c_str();
     
-    cout << endl;
+    // cout << endl;
 
-    ofstream inFile;
-    inFile.open("../config/yamlastardata.yaml");
-    inFile << yaml_out.c_str();
+    // ofstream inFile;
+    // inFile.open("../config/yamlastardata.yaml");
+    // inFile << yaml_out.c_str();
 
-    inFile.close();
+    // inFile.close();
     return 0;
 }

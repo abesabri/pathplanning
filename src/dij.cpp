@@ -9,15 +9,17 @@
 #include <sstream>
 #include <vector>
 #include <iomanip>
-#include "yaml-cpp/yaml.h"
 
 using namespace std;
+
+#define KERNEL_SIZE 3
+#define ORIGIN_MAP 15
 
 //resolution value
 double resolution = 0.0500000007451;
 //Arrays to map 1D into 2D
 int H ,W;
-vector<vector<int> > map1;
+vector<vector<int> > map;
 vector<vector<int> > graph;
 //vectors to store path
 vector<vector<int> >v1;
@@ -33,20 +35,20 @@ bool isValid(int row, int col, int row_max, int col_max)
 
 void checkNeighbours(int row, int col){
     int rneigh,cneigh,i,j;
-    int row_max = map1.size();
-    int col_max = map1[0].size();
+    int row_max = map.size();
+    int col_max = map[0].size();
     i = (row*(W)+col);
     if (isValid(row-1,col, row_max, col_max) == true){
         rneigh = row-1;
         cneigh = col;
         j = (rneigh*W)+cneigh;
-        if(map1[row-1][col] == 100 || map1[row][col] == 100){
+        if(map[row-1][col] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map1[row-1][col] == -1 || map1[row][col] == -1){
+        else if(map[row-1][col] == -1 || map[row][col] == -1){
             graph[i][j] = 50; 
         }
-        else if(map1[row-1][col] == 0 || map1[row][col] == 0){
+        else if(map[row-1][col] == 0 || map[row][col] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -58,13 +60,13 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col;
         j = (rneigh*W)+cneigh;   
-        if(map1[row+1][col] == 100 || map1[row][col] == 100){
+        if(map[row+1][col] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map1[row+1][col] == -1 || map1[row][col] == -1){
+        else if(map[row+1][col] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map1[row+1][col] == 0){
+        else if(map[row+1][col] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -77,13 +79,13 @@ void checkNeighbours(int row, int col){
         cneigh = col+1; 
         rneigh = row;
         j = (rneigh*W)+cneigh;
-        if(map1[row][col+1] == 100 || map1[row][col] == 100){
+        if(map[row][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map1[row][col+1] == -1 || map1[row][col] == -1){
+        else if(map[row][col+1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map1[row][col+1] == 0){
+        else if(map[row][col+1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -94,13 +96,13 @@ void checkNeighbours(int row, int col){
         cneigh = col-1; 
         rneigh = row;
         j = (rneigh*W)+cneigh;
-        if(map1[row][col-1] == 100 || map1[row][col] == 100){
+        if(map[row][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map1[row][col-1] == -1 || map1[row][col] == -1){
+        else if(map[row][col-1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map1[row][col-1] == 0){
+        else if(map[row][col-1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -111,13 +113,13 @@ void checkNeighbours(int row, int col){
         rneigh = row-1;
         cneigh = col+1; 
         j = (rneigh*W)+cneigh;
-        if(map1[row-1][col+1] == 100 || map1[row][col] == 100){
+        if(map[row-1][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map1[row-1][col+1] == -1 || map1[row][col] == -1){
+        else if(map[row-1][col+1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map1[row-1][col+1] == 0){
+        else if(map[row-1][col+1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -128,13 +130,13 @@ void checkNeighbours(int row, int col){
         rneigh = row-1;
         cneigh = col-1; 
         j = (rneigh*W)+cneigh;
-        if(map1[row-1][col-1] == 100 || map1[row][col] == 100){
+        if(map[row-1][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map1[row-1][col-1] == -1 || map1[row][col] == -1){
+        else if(map[row-1][col-1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map1[row-1][col-1] == 0){
+        else if(map[row-1][col-1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -145,13 +147,13 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col+1; 
         j = (rneigh*(W))+cneigh;
-        if(map1[row+1][col+1] == 100 || map1[row][col] == 100){
+        if(map[row+1][col+1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map1[row+1][col+1] == -1 || map1[row][col] == -1){
+        else if(map[row+1][col+1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map1[row+1][col+1] == 0){
+        else if(map[row+1][col+1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -162,13 +164,13 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col-1; 
         j = (rneigh*W)+cneigh;
-        if(map1[row+1][col-1] == 100 || map1[row][col] == 100){
+        if(map[row+1][col-1] == 100 || map[row][col] == 100){
             graph[i][j] = 100;
         }
-        else if(map1[row+1][col-1] == -1 || map1[row][col] == -1){
+        else if(map[row+1][col-1] == -1 || map[row][col] == -1){
             graph[i][j] = 50;
         }
-        else if(map1[row+1][col-1] == 0){
+        else if(map[row+1][col-1] == 0){
             graph[i][j] = 1;
         }
         else{
@@ -179,7 +181,7 @@ void checkNeighbours(int row, int col){
 
 
 // A utility function to find the vertex with minimum distance value, from the set of vertices not yet included in shortest path tree 
-int mDist(int dist[], bool spt[]) 
+int minDistance(int dist[], bool spt[]) 
 { 
     // Initialize min value 
     int min = INT_MAX, min_index; 
@@ -214,6 +216,7 @@ void printSolution(int dist[], int n, int parent[])
         printPath(parent, i, v);
         v1.push_back(v);
     }
+    
 } 
 
 void printGraph(){
@@ -231,10 +234,10 @@ void Path2D(vector<vector<int> >&v1,vector<vector<pair<double,double> > >&v) {
     for(int i=0; i<v1.size();i++){
         vector<pair<double,double> > tmp;
         for(int j=0; j<v1[i].size();j++){
-            x = (v1[i][j])*resolution*3;
-            y = (v1[i][j])*resolution*3;
-            x = x-32;
-            y = y-7;
+            x = (v1[i][j])*resolution*KERNEL_SIZE;
+            y = (v1[i][j])*resolution*KERNEL_SIZE;
+            x = x-ORIGIN_MAP;
+            y = y-ORIGIN_MAP;
             tmp.push_back(make_pair(y,x));
         }
         v.push_back(tmp);
@@ -271,7 +274,7 @@ void dijkstra(vector<vector<int> > &graph, int src)
     { 
         // Pick the minimum distance vertex from the set of 
         // vertices not yet processed. u is always equal to src in first iteration. 
-        int l = mDist(dist, spt); 
+        int l = minDistance(dist, spt); 
   
         // Mark the picked vertex as processed 
         spt[l] = true; 
@@ -299,17 +302,15 @@ void dijkstra(vector<vector<int> > &graph, int src)
 // Driver Code 
 int main() 
 { 
-    std::ifstream file("new.txt");
-    H = 122;
-    W = 121;
+    std::ifstream file("no.txt");
+    H = 3;
+    W = 3;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
     //int mapt[H][W];
     //for(int row = 0; row < H; ++row){
-    
     std::string line;
     std::getline(file, line);
-    if (!file.good())
-       return -1;
+    
 
     std::stringstream iss(line);
 
@@ -326,18 +327,11 @@ int main()
             convertor >> temp_int;
             tmp.push_back(temp_int);   
         }
-        map1.push_back(tmp);
+        map.push_back(tmp);
     }
 
     file.close();
-
-    for(int i =0; i < map1.size(); i++){
-        for(int j=0; j<map1[i].size();j++){
-            cout << map1[i][j] << "\t";
-        }
-        cout << endl;
-    }
-
+    
     cout << endl;
     cout << "+++ FILE WAS READ CORRECTLY +++" << endl;
     cout << endl;
@@ -365,55 +359,34 @@ int main()
     Path2D(v1,v2);
     for(int i =0; i<v2.size(); i++){
         for(int j=0; j<v2[i].size(); j++){
-            cout << fixed << setprecision(20)<< v2[i][j].first << " " <<fixed << setprecision(20)<< v2[i][j].second << " ";
+            cout << fixed << setprecision(20)<< v2[i][j].first << endl;
+            cout << fixed << setprecision(20)<< v2[i][j].second << endl;
         }
         cout << endl;
     }
+
+    cout << endl;
+    cout << "PATH FOR LAST VERTEX" << endl;
+
+    int i = v2.size()-1;
+    int j = 0;
+
+    for(i =v2.size()-1; i>0; i--)
+    {
+        if(i==v2.size()-2){
+            break;
+        }
+        else{
+            for(j=0; j<v2[i].size(); j++){
+                cout << fixed << setprecision(20)<< v2[i][j].first << " " << fixed << setprecision(20)<< v2[i][j].second << " ";   
+            }
+            cout << endl;
+            }
+    }
+ 
+
     cout << endl;
 
-    // YAML::Emitter yaml_out;
-    // yaml_out << YAML::BeginMap;
-    // yaml_out << YAML::Key << "waypoints";
-    // yaml_out << YAML::Value << YAML::BeginSeq ;
-    // for(int i =0; i<v2.size();i++)
-    // {
-    //     for(int j=0; j<v2[i].size();j++)
-    //     {
-    //         yaml_out << YAML::BeginMap;    
-    //         yaml_out << YAML::Key <<"position";
-    //         yaml_out << YAML::Value << YAML::BeginMap;
-    //         yaml_out << YAML::Key << "x";
-    //         yaml_out << YAML::Value << v2[i].first; 
-    //         yaml_out << YAML::Key << "y";
-    //         yaml_out << YAML::Value << v2[i].second;
-    //         yaml_out << YAML::Key << "z";
-    //         yaml_out << YAML::Value << "4.5";
-    //         yaml_out << YAML::EndMap;
-    //         yaml_out << YAML::Key << "orientation";
-    //         yaml_out << YAML::Value << YAML::BeginMap;
-    //         yaml_out << YAML::Key << "x";
-    //         yaml_out << YAML::Value << "0.0444210774910485";
-    //         yaml_out << YAML::Key << "y";
-    //         yaml_out << YAML::Value << "-0.03997364552703113";
-    //         yaml_out << YAML::Key << "z";
-    //         yaml_out << YAML::Value << "0.7459565426241741";
-    //         yaml_out << YAML::Key << "w";
-    //         yaml_out << YAML::Value << "0.66330815768691";
-    //         yaml_out << YAML::EndMap;
-    //         yaml_out << YAML::EndMap;
-    //     }
-        
-    // }                   
-    // yaml_out << YAML::EndSeq;
-    // yaml_out << YAML::EndMap;
-    // cout << "Here's the output YAML:\n" << yaml_out.c_str();
-    
-    // cout << endl;
-
-    // ofstream inFile;
-    // inFile.open("../config/yamldijdata.yaml");
-    // inFile << yaml_out.c_str();
-
-    // inFile.close();    
+  
     return 0; 
 } 
