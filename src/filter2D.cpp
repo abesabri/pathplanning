@@ -23,12 +23,6 @@ int main ( int argc, char** argv )
     
     readFile(strFileName, V, inFile);
 
-    //int r = 366, c = 362;
-    //Mat1d M(r,c,CV_32FC1);
-    //Mat1d dsrc(CV_32FC1,CV_32FC1);
-    //Mat1d copy_1 = Mat(dsrc.rows, dsrc.cols, CV_32F, V.data()).clone();
-    //memcpy(M.data,V.data(),V.size()*sizeof(float));
-
     //Copying vector to Mat
     //int r = 366, c = 362;
     Mat M(r,c,CV_32FC1,V);
@@ -46,16 +40,15 @@ int main ( int argc, char** argv )
     Point minLoc;
     Point maxLoc;
     
-    /// Initialize arguments for the filter
-
+    // Initialize arguments for the filter
     anchor = Point( -1, -1 );
     delta = 0;
     ddepth = -1;
     
-    /// Update kernel size for a normalized box filter
+    // Update kernel size for a normalized box filter
     kernel_size = 3;
     kernel = Mat::ones( kernel_size, kernel_size, CV_32FC1 )/ (float)(kernel_size*kernel_size);
-    /// Apply filter
+    // Apply filter
     cv::filter2D(M, dst, ddepth , kernel, anchor, delta, BORDER_DEFAULT );
     //imshow("t",dst);
 
@@ -67,26 +60,37 @@ int main ( int argc, char** argv )
         M.convertTo(intMat,CV_8U,255.0/(maxVal-minVal),-255.0*minVal/(maxVal-minVal));
     }
     
-    Mat map;
-    M.convertTo(map,CV_8U,255.0/(maxVal-minVal),-255.0*minVal/(maxVal-minVal));
-    //Loop to display values and see if they are correct
-    //Loop to display values and see if they are correct
-    cout << "Dims M " << M.rows << " " << M.cols << endl;
-    for(int i = 0; i < M.rows; i++){
-        for(int j = 0; j < M.cols; j++){
-            std::cout << int(M.at<float>(i,j)) << " ";
-        }
-        std::cout << std::endl;
-    }
-    /*for(int i = 0; i < intMat.rows; i++){
-        for(int j = 0; j < intMat.cols; j++){
-            std::cout << int(intMat.at<uchar>(i,j)) << " ";
-        }
-        std::cout << std::endl;
-    }*/
 
-    imshow("t",map);
-    imwrite("map_image.jpg",map);
+    //Loop to display values and see if they are correct
+  
+    // cout << "Dims M " << M.rows << " " << M.cols << endl;
+    // for(int i = 0; i < M.rows; i++){
+    //     for(int j = 0; j < M.cols; j++){
+    //         std::cout << int(M.at<float>(i,j)) << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
+
+    float x =0 ,y =0;
+
+    Mat downsample;
+
+    for(int i = kernel_size/2; i<dst.rows; i+=kernel_size){
+        //cout << "a" << endl;
+        for(int j = kernel_size/2; j<dst.cols; j+=kernel_size){
+            //cout << "b" << endl;
+            downsample.at<float>(x,y) = dst.at<float>(i,j);
+            x++;
+            //cout << "c" << endl;
+        }
+        y++;
+    }
+
+    //imshow("Original Map",intMat);
+    //imwrite("map_image.jpg",intMat);
+
+    imshow("downscaled",downsample);
+
     waitKey(0);
 
 return 0;
