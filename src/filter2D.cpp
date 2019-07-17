@@ -61,15 +61,15 @@ int main ( int argc, char** argv )
     }
     
 
-    //Loop to display values and see if they are correct
+    Loop to display values and see if they are correct
   
-    // cout << "Dims M " << M.rows << " " << M.cols << endl;
-    // for(int i = 0; i < M.rows; i++){
-    //     for(int j = 0; j < M.cols; j++){
-    //         std::cout << int(M.at<float>(i,j)) << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
+    cout << "Dims M " << M.rows << " " << M.cols << endl;
+    for(int i = 0; i < M.rows; i++){
+        for(int j = 0; j < M.cols; j++){
+            std::cout << int(M.at<float>(i,j)) << " ";
+        }
+        std::cout << std::endl;
+    }
 
     float x =0 ,y =0;
 
@@ -86,10 +86,10 @@ int main ( int argc, char** argv )
         y++;
     }
 
-    //imshow("Original Map",intMat);
-    //imwrite("map_image.jpg",intMat);
+    imshow("Original Map",intMat);
+    imwrite("map_image.jpg",intMat);
 
-    imshow("downscaled",downsample);
+    //imshow("downscaled",downsample);
 
     waitKey(0);
 

@@ -204,11 +204,11 @@ void printPath(int parent[], int x, vector<int> &v)
 } 
   
 // A utility function to print the constructed distance array 
-void printSolution(int dist[], int n, int parent[]) 
+void printSolution(int src, int dist[], int n, int parent[]) 
 { 
-    int src = 0; 
+    
     cout << "Vertex\t\t Distance\tPath" << endl;
-    for (int i = 1; i < H*W; i++) 
+    for (int i = 0; i < H*W; i++) 
     { 
         vector<int> v;
         cout << endl;
@@ -234,16 +234,19 @@ void Path2D(vector<vector<int> >&v1,vector<vector<pair<double,double> > >&v) {
     for(int i=0; i<v1.size();i++){
         vector<pair<double,double> > tmp;
         for(int j=0; j<v1[i].size();j++){
-            x = (v1[i][j])*resolution*KERNEL_SIZE;
-            y = (v1[i][j])*resolution*KERNEL_SIZE;
+            x = (v1[i][j])%W;
+            x = x*resolution*KERNEL_SIZE;
+            y = (v1[i][j])/W;
+            y = y*resolution*KERNEL_SIZE;
             x = x-ORIGIN_MAP;
             y = y-ORIGIN_MAP;
-            tmp.push_back(make_pair(y,x));
+            tmp.push_back(make_pair(x,y));
         }
         v.push_back(tmp);
     }
 }
   
+
 // Funtion that implements Dijkstra's single source shortest path algorithm for a graph represented using adjacency matrix representation 
 void dijkstra(vector<vector<int> > &graph, int src) 
 { 
@@ -296,7 +299,7 @@ void dijkstra(vector<vector<int> > &graph, int src)
         }
     } 
     // print the constructed distance array 
-    printSolution(dist, H*W, parent); 
+    printSolution(src,dist, H*W, parent); 
 } 
   
 // Driver Code 
@@ -356,33 +359,32 @@ int main()
     cout << endl;
     cout << "+++ COMPUTING PATH IN RESOLUTION +++" << endl;
     cout << endl;
-    Path2D(v1,v2);
-    for(int i =0; i<v2.size(); i++){
-        for(int j=0; j<v2[i].size(); j++){
-            cout << fixed << setprecision(20)<< v2[i][j].first << endl;
-            cout << fixed << setprecision(20)<< v2[i][j].second << endl;
-        }
-        cout << endl;
-    }
+    // Path2D(v1,v2);
+    // // for(int i =0; i<v2.size(); i++){
+    // //     for(int j=0; j<v2[i].size(); j++){
+    // //         cout << fixed << setprecision(20)<< v2[i][j].first << " " << fixed << setprecision(20)<< v2[i][j].second << endl;
+    // //     }
+    // //     cout << endl;
+    // // }
 
-    cout << endl;
-    cout << "PATH FOR LAST VERTEX" << endl;
+    // cout << endl;
+    // cout << "PATH FOR LAST VERTEX" << endl;
 
-    int i = v2.size()-1;
-    int j = 0;
+    // int i = v2.size()-1;
+    // int j = 0;
 
-    for(i =v2.size()-1; i>0; i--)
-    {
-        if(i==v2.size()-2){
-            break;
-        }
-        else{
-            for(j=0; j<v2[i].size(); j++){
-                cout << fixed << setprecision(20)<< v2[i][j].first << " " << fixed << setprecision(20)<< v2[i][j].second << " ";   
-            }
-            cout << endl;
-            }
-    }
+    // for(i =v2.size()-1; i>0; i--)
+    // {
+    //     if(i==v2.size()-2){
+    //         break;
+    //     }
+    //     else{
+    //         for(j=0; j<v2[i].size(); j++){
+    //             cout << fixed << setprecision(20)<< v2[i][j].first << " " << fixed << setprecision(20)<< v2[i][j].second << " ";   
+    //         }
+    //         cout << endl;
+    //         }
+    // }
  
 
     cout << endl;
