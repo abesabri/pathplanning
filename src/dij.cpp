@@ -305,9 +305,9 @@ void dijkstra(vector<vector<int> > &graph, int src)
 // Driver Code 
 int main() 
 { 
-    std::ifstream file("no.txt");
-    H = 3;
-    W = 3;
+    std::ifstream file("new.txt");
+    H = 122;
+    W = 121;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
     //int mapt[H][W];
     //for(int row = 0; row < H; ++row){
@@ -359,7 +359,7 @@ int main()
     cout << endl;
     cout << "+++ COMPUTING PATH IN RESOLUTION +++" << endl;
     cout << endl;
-    // Path2D(v1,v2);
+    Path2D(v1,v2);
     // // for(int i =0; i<v2.size(); i++){
     // //     for(int j=0; j<v2[i].size(); j++){
     // //         cout << fixed << setprecision(20)<< v2[i][j].first << " " << fixed << setprecision(20)<< v2[i][j].second << endl;
@@ -367,24 +367,24 @@ int main()
     // //     cout << endl;
     // // }
 
-    // cout << endl;
-    // cout << "PATH FOR LAST VERTEX" << endl;
+    cout << endl;
+    cout << "PATH FOR LAST VERTEX" << endl;
 
-    // int i = v2.size()-1;
-    // int j = 0;
+    int i = v2.size()-1;
+    int j = 0;
 
-    // for(i =v2.size()-1; i>0; i--)
-    // {
-    //     if(i==v2.size()-2){
-    //         break;
-    //     }
-    //     else{
-    //         for(j=0; j<v2[i].size(); j++){
-    //             cout << fixed << setprecision(20)<< v2[i][j].first << " " << fixed << setprecision(20)<< v2[i][j].second << " ";   
-    //         }
-    //         cout << endl;
-    //         }
-    // }
+    for(i =v2.size()-1; i>0; i--)
+    {
+        if(i==v2.size()-2){
+            break;
+        }
+        else{
+            for(j=0; j<v2[i].size(); j++){
+                cout << fixed << setprecision(20)<< v2[i][j].first << " " << fixed << setprecision(20)<< v2[i][j].second << " ";   
+            }
+            cout << endl;
+            }
+    }
  
 
     cout << endl;

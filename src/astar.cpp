@@ -20,7 +20,8 @@ using namespace cv;
 
 #define KERNEL_SIZE 3
 #define ORIGIN_MAP 15
-
+#define OH 366
+#define OW 362
 typedef pair<int,int> pathTemp;
 typedef pair<double,double> pathStore;
 
@@ -165,7 +166,7 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
         }
         cout << endl;
     
-    Mat imgmat = imread("../images/map_image.jpg");
+    Mat imgmat = imread("../images/Filter_Map.jpg");
     Vec3b color;
     color[0] = 0;
     color[1] = 255;
@@ -178,7 +179,7 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
     }
 
     imshow("window",imgmat);
-    imwrite("../images/manhattan.jpg",imgmat);
+    imwrite("../images/fm.jpg",imgmat);
     waitKey(0);
 
     return vecPath;
@@ -190,31 +191,40 @@ void checkNeighbours(int row, int col){
     int rneigh,cneigh,i,j;
     int row_max = map1.size();
     int col_max = map1[0].size();
+    // cout << row_max << endl;
+    // cout << col_max << endl;
     i = (row*W)+col;
+    //cout << i << endl;
     if (isValid(row-1,col, row_max, col_max) == true){
         rneigh = row-1;
         cneigh = col;
         j = (rneigh*W)+cneigh;
+        //cout << j << endl;
         if(map1[row-1][col] == 3 || map1[row][col] == 3){
-            graph[i][j] = 3;
+            graph[i][j] = 100;
+            
         }
         else if(map1[row-1][col] == -1 || map1[row][col] == -1){
             graph[i][j] = 50; 
+            
         }
         else if(map1[row-1][col] == 0 || map1[row][col] == 0){
             graph[i][j] = 1;
         }
         else{
+            //cout << "A" << endl;
             graph[i][j] = 0;
         }
         
     }
+    //cout << "A" << endl;
     if (isValid(row+1,col, row_max, col_max) == true){
+        //cout << "B" << endl;
         rneigh = row+1;
         cneigh = col;
         j = (rneigh*W)+cneigh;   
         if(map1[row+1][col] == 3 || map1[row][col] == 3){
-            graph[i][j] = 3;
+            graph[i][j] = 100;
      
         }
         else if(map1[row+1][col] == -1 || map1[row][col] == -1){
@@ -230,11 +240,12 @@ void checkNeighbours(int row, int col){
     }
 
     if (isValid(row,col+1, row_max, col_max) == true){
+        //cout << "C" << endl;
         cneigh = col+1; 
         rneigh = row;
         j = (rneigh*W)+cneigh;
         if(map1[row][col+1] == 3 || map1[row][col] == 3){
-            graph[i][j] = 3;
+            graph[i][j] = 100;
         }
         else if(map1[row][col+1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;   
@@ -252,7 +263,7 @@ void checkNeighbours(int row, int col){
         j = (rneigh*W)+cneigh;
       
         if(map1[row][col-1] == 3 || map1[row][col] == 3){
-            graph[i][j] = 3;
+            graph[i][j] = 100;
            
         }
         else if(map1[row][col-1] == -1 || map1[row][col] == -1){
@@ -271,7 +282,7 @@ void checkNeighbours(int row, int col){
         j = (rneigh*W)+cneigh;
    
         if(map1[row-1][col+1] == 3 || map1[row][col] == 3){
-            graph[i][j] = 3;
+            graph[i][j] = 100;
         }
         else if(map1[row-1][col+1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
@@ -289,7 +300,7 @@ void checkNeighbours(int row, int col){
         cneigh = col-1; 
         j = (rneigh*W)+cneigh;
         if(map1[row-1][col-1] == 3 || map1[row][col] == 3){
-            graph[i][j] = 3;
+            graph[i][j] = 100;
         
         }
         else if(map1[row-1][col-1] == -1 || map1[row][col] == -1){
@@ -309,7 +320,7 @@ void checkNeighbours(int row, int col){
         cneigh = col+1; 
         j = (rneigh*W)+cneigh;
         if(map1[row+1][col+1] == 3 || map1[row][col] == 3){
-            graph[i][j] = 3;
+            graph[i][j] = 100;
         }
         else if(map1[row+1][col+1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
@@ -326,7 +337,7 @@ void checkNeighbours(int row, int col){
         cneigh = col-1; 
         j = (rneigh*W)+cneigh;
         if(map1[row+1][col-1] == 3 || map1[row][col] == 3){
-            graph[i][j] = 3;
+            graph[i][j] = 100;
         }
         else if(map1[row+1][col-1] == -1 || map1[row][col] == -1){
             graph[i][j] = 50;
@@ -806,50 +817,60 @@ void printGraph(){
 // Driver program to test above function
 int main()
 {
-    ifstream file("new.txt");
+    ifstream file("downsample3.txt");
     if (!file.good()) {
         cout << "Bad file" << endl;
         return -1;
     }  
-    H = 122;
-    W = 121;
+    
+    H = ceil(float(OH)/KERNEL_SIZE);
+    W = ceil(float(OW)/KERNEL_SIZE);
+    cout << H << " " << W <<endl;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
-    std::string line;
-    std::getline(file, line);
-   
-        
-    std::stringstream iss(line);
-    for(int row = 0; row < H; ++row){
-        vector<int> tmp;
-        for (int col = 0; col < W; ++col)
-        {
-            int temp_int;
-            std::string val;
-            std::getline(iss, val, ',');
-            if ( !iss.good() )
-                break;
-            std::stringstream convertor(val);
-            convertor >> temp_int;
-            tmp.push_back(temp_int);   
+    std::string line;    
+    //std::getline(file, line);
+    while (getline(file,line)){
+        cout << "line" << endl;
+        std::stringstream iss(line);
+        for(int row = 0; row < H; row++){
+            vector<int> tmp;
+            for (int col = 0; col < W; col++)
+            {
+                int temp_int;
+                std::string val;
+                std::getline(iss, val, ',');
+                if ( !iss.good() ){
+                    cout << "It broke" << " " << row << " " << col << endl;
+                    cout << iss.eof() << endl;
+                    break;
+                }
+                
+                std::stringstream convertor(val);
+                convertor >> temp_int;
+                tmp.push_back(temp_int);   
+            }
+            map1.push_back(tmp);
         }
-        map1.push_back(tmp);
     }
-
     file.close();
   
   for(int i =0; i < map1.size(); i++){
         for(int j=0; j<map1[i].size();j++){
-            cout << map1[i][j] << "\t";
+            //cout << map1[i][j] << "\t";
         }
         cout << endl;
     }
 
+    cout << map1.size() << endl;
+    cout << map1[0].size() << endl;
     cout << endl;
     cout << "+++ FILE WAS READ CORRECTLY +++" << endl;
     cout << endl;
 
+
     for(int i =0; i < H; i++){
         for(int j=0; j< W; j++){
+            //cout << i << " " << j << endl;
             checkNeighbours(i,j);
         }
       
@@ -870,45 +891,45 @@ int main()
     cout << endl;
     aStar(graph, src, dest);
     
-    YAML::Emitter yaml_out;
-    yaml_out << YAML::BeginMap;
-    yaml_out << YAML::Key << "waypoints";
-    yaml_out << YAML::Value << YAML::BeginSeq ;
-    for(int i =0; i<vecPath.size();i++)
-    {
-        yaml_out << YAML::BeginMap;    
-        yaml_out << YAML::Key <<"position";
-        yaml_out << YAML::Value << YAML::BeginMap;
-        yaml_out << YAML::Key << "x";
-        yaml_out << YAML::Value << vecPath[i].first;
-        yaml_out << YAML::Key << "y";
-        yaml_out << YAML::Value << vecPath[i].second;
-        yaml_out << YAML::Key << "z";
-        yaml_out << YAML::Value << "4.5";
-        yaml_out << YAML::EndMap;
-        yaml_out << YAML::Key << "orientation";
-        yaml_out << YAML::Value << YAML::BeginMap;
-        yaml_out << YAML::Key << "x";
-        yaml_out << YAML::Value << "0.0444210774910485";
-        yaml_out << YAML::Key << "y";
-        yaml_out << YAML::Value << "-0.03997364552703113";
-        yaml_out << YAML::Key << "z";
-        yaml_out << YAML::Value << "0.7459565426241741";
-        yaml_out << YAML::Key << "w";
-        yaml_out << YAML::Value << "0.66330815768691";
-        yaml_out << YAML::EndMap;
-        yaml_out << YAML::EndMap;
-    }                   
-    yaml_out << YAML::EndSeq;
-    yaml_out << YAML::EndMap;
-    cout << "Here's the output YAML:\n" << yaml_out.c_str();
+    // YAML::Emitter yaml_out;
+    // yaml_out << YAML::BeginMap;
+    // yaml_out << YAML::Key << "waypoints";
+    // yaml_out << YAML::Value << YAML::BeginSeq ;
+    // for(int i =0; i<vecPath.size();i++)
+    // {
+    //     yaml_out << YAML::BeginMap;    
+    //     yaml_out << YAML::Key <<"position";
+    //     yaml_out << YAML::Value << YAML::BeginMap;
+    //     yaml_out << YAML::Key << "x";
+    //     yaml_out << YAML::Value << vecPath[i].first;
+    //     yaml_out << YAML::Key << "y";
+    //     yaml_out << YAML::Value << vecPath[i].second;
+    //     yaml_out << YAML::Key << "z";
+    //     yaml_out << YAML::Value << "4.5";
+    //     yaml_out << YAML::EndMap;
+    //     yaml_out << YAML::Key << "orientation";
+    //     yaml_out << YAML::Value << YAML::BeginMap;
+    //     yaml_out << YAML::Key << "x";
+    //     yaml_out << YAML::Value << "0.0444210774910485";
+    //     yaml_out << YAML::Key << "y";
+    //     yaml_out << YAML::Value << "-0.03997364552703113";
+    //     yaml_out << YAML::Key << "z";
+    //     yaml_out << YAML::Value << "0.7459565426241741";
+    //     yaml_out << YAML::Key << "w";
+    //     yaml_out << YAML::Value << "0.66330815768691";
+    //     yaml_out << YAML::EndMap;
+    //     yaml_out << YAML::EndMap;
+    // }                   
+    // yaml_out << YAML::EndSeq;
+    // yaml_out << YAML::EndMap;
+    // cout << "Here's the output YAML:\n" << yaml_out.c_str();
     
-    cout << endl;
+    // cout << endl;
 
-    ofstream inFile;
-    inFile.open("../config/yamlastardiagonaldata.yaml");
-    inFile << yaml_out.c_str();
+    // ofstream inFile;
+    // inFile.open("../config/yamlastardiagonaldata.yaml");
+    // inFile << yaml_out.c_str();
 
-    inFile.close();
+    // inFile.close();
     return 0;
 }
