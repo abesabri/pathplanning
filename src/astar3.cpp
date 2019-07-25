@@ -18,8 +18,8 @@
 using namespace std;
 using namespace cv;
 
-#define KERNEL_SIZE 7
-#define ORIGIN_MAP 2.14 //15/3
+#define KERNEL_SIZE 3
+#define ORIGIN_MAP 15 //15/3
 #define OH 366 //original height
 #define OW 362 //original width
 #define OS 10 //original source
@@ -103,23 +103,23 @@ bool isDestination(int row, int col, Pair dest)
 //     return ((double)sqrt((row - dest.first) * (row - dest.first) + (col - dest.second) * (col - dest.second)));
 // }
 
-double calculateHValue(int row, int col, Pair src,Pair dest){ //MANHATTAN
-    int D = 1;
-    int dx,dy;
-    dx = abs(row-dest.first);
-    dy = abs(col-dest.second);
-    return D*(dx+dy);
-}
-
-// double calculateHValue(int row, int col, Pair src, Pair dest){ //DIAGONAL
-//     int D = 1, D2 = 8*D;
+// double calculateHValue(int row, int col, Pair src,Pair dest){ //MANHATTAN
+//     int D = 1;
 //     int dx,dy;
 //     dx = abs(row-dest.first);
 //     dy = abs(col-dest.second);
-//     //double m = max(abs((row - dest.first)),abs((col-dest.second)));
-//     //return (m);
-//     return D*(dx+dy)+(D2-2*D)*min(dx,dy);
+//     return D*(dx+dy);
 // }
+
+double calculateHValue(int row, int col, Pair src, Pair dest){ //DIAGONAL
+    int D = 1, D2 = 8*D;
+    int dx,dy;
+    dx = abs(row-dest.first);
+    dy = abs(col-dest.second);
+    //double m = max(abs((row - dest.first)),abs((col-dest.second)));
+    //return (m);
+    return D*(dx+dy)+(D2-2*D)*min(dx,dy);
+}
 
 // A Utility Function to trace the path from the source
 // to destination
@@ -171,7 +171,7 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
         }
         cout << endl;
     
-    Mat imgmat = imread("../images/downscaled7.jpg");
+    Mat imgmat = imread("../images/downscaled3.jpg");
     Vec3b color;
     color[0] = 0;
     color[1] = 255;
@@ -184,7 +184,7 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
     }
 
     imshow("window",imgmat);
-    imwrite("../images/diag7.jpg",imgmat);
+    imwrite("../images/diag3.jpg",imgmat);
     waitKey(0);
 
     return vecPath;
@@ -822,15 +822,15 @@ void printGraph(){
 // Driver program to test above function
 int main()
 {
-    ifstream file("downsample7.txt");
+    ifstream file("downsample3.txt");
     if (!file.good()) {
         cout << "Bad file" << endl;
         return -1;
     }  
-    //H = 366;
-    //W = 362;
-    H = ceil(float(OH)/KERNEL_SIZE);
-    W = ceil(float(OW)/KERNEL_SIZE);
+    H = 122;
+    W = 121;
+    //H = ceil(float(OH)/KERNEL_SIZE);
+    //W = ceil(float(OW)/KERNEL_SIZE);
     cout << H << " " << W <<endl;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
     std::string line;    
@@ -889,8 +889,8 @@ int main()
     double m,n;
     m = OS*resolution;
     n = OD*resolution;
-    m = m/res7;
-    n = n/res7;
+    m = m/res3;
+    n = n/res3;
     //cout << m << " " << n << endl;
     // // Source is the left-most bottom-most corner
     Pair src = make_pair(m, m);
@@ -938,7 +938,7 @@ int main()
     cout << endl;
 
     ofstream inFile;
-    inFile.open("../config/yamlman7data.yaml");
+    inFile.open("../config/yamldiag3data.yaml");
     inFile << yaml_out.c_str();
 
     inFile.close();

@@ -18,8 +18,8 @@
 using namespace std;
 using namespace cv;
 
-#define KERNEL_SIZE 7
-#define ORIGIN_MAP 2.14 //15/3
+#define KERNEL_SIZE 5
+#define ORIGIN_MAP 3 //15/3
 #define OH 366 //original height
 #define OW 362 //original width
 #define OS 10 //original source
@@ -84,7 +84,7 @@ bool isDestination(int row, int col, Pair dest)
         return (false);
 }
 
-// A Utility Function to calculate the 'h' heuristics.
+// // A Utility Function to calculate the 'h' heuristics.
 // double calculateHValue(int row, int col, Pair src, Pair dest)
 // {
 //     // double dx1,dy1,dx2,dy2,cross,heuristic = 0;
@@ -171,7 +171,7 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
         }
         cout << endl;
     
-    Mat imgmat = imread("../images/downscaled7.jpg");
+    Mat imgmat = imread("../images/downscaled5.jpg");
     Vec3b color;
     color[0] = 0;
     color[1] = 255;
@@ -184,7 +184,7 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
     }
 
     imshow("window",imgmat);
-    imwrite("../images/diag7.jpg",imgmat);
+    imwrite("../images/diag5.jpg",imgmat);
     waitKey(0);
 
     return vecPath;
@@ -822,7 +822,7 @@ void printGraph(){
 // Driver program to test above function
 int main()
 {
-    ifstream file("downsample7.txt");
+    ifstream file("downsample5.txt");
     if (!file.good()) {
         cout << "Bad file" << endl;
         return -1;
@@ -889,8 +889,8 @@ int main()
     double m,n;
     m = OS*resolution;
     n = OD*resolution;
-    m = m/res7;
-    n = n/res7;
+    m = m/res5;
+    n = n/res5;
     //cout << m << " " << n << endl;
     // // Source is the left-most bottom-most corner
     Pair src = make_pair(m, m);
@@ -938,7 +938,7 @@ int main()
     cout << endl;
 
     ofstream inFile;
-    inFile.open("../config/yamlman7data.yaml");
+    inFile.open("../config/yamldiag5data.yaml");
     inFile << yaml_out.c_str();
 
     inFile.close();

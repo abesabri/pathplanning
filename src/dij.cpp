@@ -9,10 +9,13 @@
 #include <sstream>
 #include <vector>
 #include <iomanip>
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/highgui/highgui.hpp"
 
 using namespace std;
+using namespace cv;
 
-#define KERNEL_SIZE 3
+#define KERNEL_SIZE 7
 #define ORIGIN_MAP 15
 
 //resolution value
@@ -231,6 +234,7 @@ void printGraph(){
 
 void Path2D(vector<vector<int> >&v1,vector<vector<pair<double,double> > >&v) {
     double x,y;
+    int m,n;
     for(int i=0; i<v1.size();i++){
         vector<pair<double,double> > tmp;
         for(int j=0; j<v1[i].size();j++){
@@ -244,6 +248,23 @@ void Path2D(vector<vector<int> >&v1,vector<vector<pair<double,double> > >&v) {
         }
         v.push_back(tmp);
     }
+
+    // Mat imgmat = imread("../images/downscaled3.jpg");
+    // Vec3b color;
+    // color[0] = 0;
+    // color[1] = 255;
+    // color[2] = 0;
+
+    // for(int i =0; i< v.size();i++){
+    //     m = v[i]*KERNEL_SIZE;
+    //     n = v[i]*KERNEL_SIZE;
+    //     imgmat.at<Vec3b>(Point(m,n)) = color;
+    // }
+
+    // imshow("window",imgmat);
+    // imwrite("../images/dijpath.jpg",imgmat);
+    // waitKey(0);
+
 }
   
 
@@ -305,9 +326,9 @@ void dijkstra(vector<vector<int> > &graph, int src)
 // Driver Code 
 int main() 
 { 
-    std::ifstream file("new.txt");
-    H = 122;
-    W = 121;
+    std::ifstream file("downsample7.txt");
+    H = 53;
+    W = 52;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
     //int mapt[H][W];
     //for(int row = 0; row < H; ++row){
