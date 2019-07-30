@@ -22,8 +22,10 @@ using namespace cv;
 #define ORIGIN_MAP 2.14 //15/3
 #define OH 366 //original height
 #define OW 362 //original width
-#define OS 10 //original source
-#define OD 120 //original destination
+#define OSx 320 //original source x
+#define OSy 40 //original source y
+#define ODx 320 //original destination x
+#define ODy 300 //original destination y
 typedef pair<int,int> pathTemp;
 typedef pair<double,double> pathStore;
 
@@ -84,42 +86,54 @@ bool isDestination(int row, int col, Pair dest)
         return (false);
 }
 
-// A Utility Function to calculate the 'h' heuristics.
+// // A Utility Function to calculate the 'h' heuristics.
 // double calculateHValue(int row, int col, Pair src, Pair dest)
 // {
-//     // double dx1,dy1,dx2,dy2,cross,heuristic = 0;
-//     // if(map1[row][col] == 3) {
-//     //     heuristic = 1000;
-//     //     return heuristic;
-//     // }
-//     // dx1 = row - dest.first;
-//     // dy1 = col - dest.second;
-//     // dx2 = src.first - dest.first;
-//     // dy2 = src.second - dest.second;
-//     // cross = dx1*dy2 - dx2*dy1;
-//     // heuristic += cross*0.001;
-//     // return heuristic;
+//     double dx1,dy1,dx2,dy2,cross,heuristic = 0;
+//     if(map1[row][col] == 3) {
+//         heuristic = 1000;
+//         return heuristic;
+//     }
+//     dx1 = row - dest.first;
+//     dy1 = col - dest.second;
+//     dx2 = src.first - dest.first;
+//     dy2 = src.second - dest.second;
+//     cross = dx1*dy2 - dx2*dy1;
+//     heuristic += cross*0.001;
+//     return heuristic;
 //     // Return using the distance formula
-//     return ((double)sqrt((row - dest.first) * (row - dest.first) + (col - dest.second) * (col - dest.second)));
+//     //return ((double)sqrt((row - dest.first) * (row - dest.first) + (col - dest.second) * (col - dest.second)));
 // }
 
-double calculateHValue(int row, int col, Pair src,Pair dest){ //MANHATTAN
-    int D = 1;
-    int dx,dy;
-    dx = abs(row-dest.first);
-    dy = abs(col-dest.second);
-    return D*(dx+dy);
-}
-
-// double calculateHValue(int row, int col, Pair src, Pair dest){ //DIAGONAL
-//     int D = 1, D2 = 8*D;
+// double calculateHValue(int row, int col, Pair src,Pair dest){ //MANHATTAN
+//     double heuristic;
+//     if(map1[row][col] == 3) {
+//         heuristic = 1000;
+//         return heuristic;
+//     }
+//     double D = 1.0;
 //     int dx,dy;
 //     dx = abs(row-dest.first);
 //     dy = abs(col-dest.second);
-//     //double m = max(abs((row - dest.first)),abs((col-dest.second)));
-//     //return (m);
-//     return D*(dx+dy)+(D2-2*D)*min(dx,dy);
+//     heuristic = D*(dx+dy);
+//     return heuristic;
 // }
+
+double calculateHValue(int row, int col, Pair src, Pair dest){ //DIAGONAL
+    double heuristic;
+    if(map1[row][col] == 3) {
+        heuristic = 1000;
+        return heuristic;
+    }
+    int D = 1, D2 = 8*D;
+    int dx,dy;
+    dx = abs(row-dest.first);
+    dy = abs(col-dest.second);
+    // double m = max(abs((row - dest.first)),abs((col-dest.second)));
+    // return (m);
+    heuristic = D*(dx+dy)+(D2-2*D)*min(dx,dy);
+    return heuristic;
+}
 
 // A Utility Function to trace the path from the source
 // to destination
@@ -171,7 +185,7 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
         }
         cout << endl;
     
-    Mat imgmat = imread("../images/downscaled7.jpg");
+    Mat imgmat = imread("../images/Filter_Map.jpg");
     Vec3b color;
     color[0] = 0;
     color[1] = 255;
@@ -184,7 +198,7 @@ vector<pathStore> trace(cell **cellDetails, Pair dest)
     }
 
     imshow("window",imgmat);
-    imwrite("../images/diag7.jpg",imgmat);
+    imwrite("../images/man7.jpg",imgmat);
     waitKey(0);
 
     return vecPath;
@@ -459,6 +473,8 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
         // To store the 'g', 'h' and 'f' of the 8 successors
         double gNew, hNew, fNew;
 
+        int rneigh, cneigh, gi, gj;
+        gi = (i*W)+j;
         //----------- (North) ------------
 
         // Only process this cell if this is a valid one
@@ -482,9 +498,13 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
             else if (closedList[i - 1][j] == false &&
                      isUnBlocked(graph, i - 1, j) == true)
             {
-                gNew = cellDetails[i][j].g + 1.0;
+                rneigh = i-1;
+                cneigh = j;
+                gj = (rneigh*W)+cneigh;
+                gNew = cellDetails[i][j].g + graph[gi][gj];
                 hNew = calculateHValue(i - 1, j, src,dest);
                 fNew = gNew + hNew;
+                cout << gNew << " " << hNew << endl;
 
                 // If it isn’t on the open list, add it to
                 // the open list. Make the current square
@@ -529,9 +549,13 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
             else if (closedList[i + 1][j] == false &&
                      isUnBlocked(graph, i + 1, j) == true)
             {
-                gNew = cellDetails[i][j].g + 1.0;
+                rneigh = i+1;
+                cneigh = j;
+                gj = (rneigh*W)+cneigh;
+                gNew = cellDetails[i][j].g + graph[gi][gj];
                 hNew = calculateHValue(i + 1, j,src, dest);
                 fNew = gNew + hNew;
+                cout << gNew << " " << hNew << endl;
 
                
                 if (cellDetails[i + 1][j].f == FLT_MAX ||
@@ -569,9 +593,13 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
             else if (closedList[i][j + 1] == false &&
                      isUnBlocked(graph, i, j + 1) == true)
             {
-                gNew = cellDetails[i][j].g + 1.0;
+                cneigh = j+1; 
+                rneigh = i;
+                gj = (rneigh*W)+cneigh;
+                gNew = cellDetails[i][j].g+ graph[gi][gj];
                 hNew = calculateHValue(i, j + 1, src,dest);
                 fNew = gNew + hNew;
+                cout << gNew << " " << hNew << endl;
 
                
                 if (cellDetails[i][j + 1].f == FLT_MAX ||
@@ -610,9 +638,13 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
             else if (closedList[i][j - 1] == false &&
                      isUnBlocked(graph, i, j - 1) == true)
             {
-                gNew = cellDetails[i][j].g + 1.0;
+                cneigh = j-1; 
+                rneigh = i;
+                gj = (rneigh*W)+cneigh;
+                gNew = cellDetails[i][j].g+ graph[gi][gj];
                 hNew = calculateHValue(i, j - 1,src, dest);
                 fNew = gNew + hNew;
+                cout << gNew << " " << hNew << endl;
 
              
                 if (cellDetails[i][j - 1].f == FLT_MAX ||
@@ -652,9 +684,13 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
             else if (closedList[i - 1][j + 1] == false &&
                      isUnBlocked(graph, i - 1, j + 1) == true)
             {
-                gNew = cellDetails[i][j].g + 1.414;
+                rneigh = i-1;
+                cneigh = j+1; 
+                gj = (rneigh*W)+cneigh;
+                gNew = cellDetails[i][j].g + (1.414*graph[gi][gj]);
                 hNew = calculateHValue(i - 1, j + 1,src, dest);
                 fNew = gNew + hNew;
+                cout << gNew << " " << hNew << endl;
 
               
                 if (cellDetails[i - 1][j + 1].f == FLT_MAX ||
@@ -693,9 +729,13 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
             else if (closedList[i - 1][j - 1] == false &&
                      isUnBlocked(graph, i - 1, j - 1) == true)
             {
-                gNew = cellDetails[i][j].g + 1.414;
+                rneigh = i-1;
+                cneigh = j-1; 
+                gj = (rneigh*W)+cneigh;
+                gNew = cellDetails[i][j].g + (1.414*graph[gi][gj]);
                 hNew = calculateHValue(i - 1, j - 1, src,dest);
                 fNew = gNew + hNew;
+                cout << gNew << " " << hNew << endl;
 
        
                 if (cellDetails[i - 1][j - 1].f == FLT_MAX ||
@@ -732,7 +772,10 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
             else if (closedList[i + 1][j + 1] == false &&
                      isUnBlocked(graph, i + 1, j + 1) == true)
             {
-                gNew = cellDetails[i][j].g + 1.414;
+                rneigh = i+1;
+                cneigh = j+1; 
+                gj = (rneigh*W)+cneigh;
+                gNew = cellDetails[i][j].g + (1.414*graph[gi][gj]);
                 hNew = calculateHValue(i + 1, j + 1, src,dest);
                 fNew = gNew + hNew;
 
@@ -772,9 +815,13 @@ void aStar(vector<vector<int> > &graph, Pair src, Pair dest)
             else if (closedList[i + 1][j - 1] == false &&
                      isUnBlocked(graph, i + 1, j - 1) == true)
             {
-                gNew = cellDetails[i][j].g + 1.414;
+                rneigh = i+1;
+                cneigh = i-1; 
+                gj = (rneigh*W)+cneigh;
+                gNew = cellDetails[i][j].g + (1.414*graph[gi][gj]);
                 hNew = calculateHValue(i + 1, j - 1, src,dest);
                 fNew = gNew + hNew;
+                cout << gNew << " " << hNew << endl;
 
                 if (cellDetails[i + 1][j - 1].f == FLT_MAX ||
                     cellDetails[i + 1][j - 1].f > fNew)
@@ -886,61 +933,65 @@ int main()
     cout << "+++ PRINTING GRAPH +++" << endl;
     cout << endl;
     //printGraph();
-    double m,n;
-    m = OS*resolution;
-    n = OD*resolution;
+    double m,n,p,q;
+    m = OSx*resolution;
+    n = OSy*resolution;
     m = m/res7;
     n = n/res7;
+    p = ODx*resolution;
+    q = ODy*resolution;
+    p = p/res7;
+    q = q/res7;
     //cout << m << " " << n << endl;
     // // Source is the left-most bottom-most corner
-    Pair src = make_pair(m, m);
+    Pair src = make_pair(m, n);
 
     // // Destination is the left-most top-most corner
-    Pair dest = make_pair(n,n);
+    Pair dest = make_pair(p,q);
     cout << endl;
     cout << "+++ COMPUTING ASTAR SOLUTION +++" << endl;
     cout << endl;
     aStar(graph, src, dest);
     
-    YAML::Emitter yaml_out;
-    yaml_out << YAML::BeginMap;
-    yaml_out << YAML::Key << "waypoints";
-    yaml_out << YAML::Value << YAML::BeginSeq ;
-    for(int i =0; i<vecPath.size();i++)
-    {
-        yaml_out << YAML::BeginMap;    
-        yaml_out << YAML::Key <<"position";
-        yaml_out << YAML::Value << YAML::BeginMap;
-        yaml_out << YAML::Key << "x";
-        yaml_out << YAML::Value << vecPath[i].first;
-        yaml_out << YAML::Key << "y";
-        yaml_out << YAML::Value << vecPath[i].second;
-        yaml_out << YAML::Key << "z";
-        yaml_out << YAML::Value << "4.5";
-        yaml_out << YAML::EndMap;
-        yaml_out << YAML::Key << "orientation";
-        yaml_out << YAML::Value << YAML::BeginMap;
-        yaml_out << YAML::Key << "x";
-        yaml_out << YAML::Value << "0.0444210774910485";
-        yaml_out << YAML::Key << "y";
-        yaml_out << YAML::Value << "-0.03997364552703113";
-        yaml_out << YAML::Key << "z";
-        yaml_out << YAML::Value << "0.7459565426241741";
-        yaml_out << YAML::Key << "w";
-        yaml_out << YAML::Value << "0.66330815768691";
-        yaml_out << YAML::EndMap;
-        yaml_out << YAML::EndMap;
-    }                   
-    yaml_out << YAML::EndSeq;
-    yaml_out << YAML::EndMap;
-    cout << "Here's the output YAML:\n" << yaml_out.c_str();
+    // YAML::Emitter yaml_out;
+    // yaml_out << YAML::BeginMap;
+    // yaml_out << YAML::Key << "waypoints";
+    // yaml_out << YAML::Value << YAML::BeginSeq ;
+    // for(int i =0; i<vecPath.size();i++)
+    // {
+    //     yaml_out << YAML::BeginMap;    
+    //     yaml_out << YAML::Key <<"position";
+    //     yaml_out << YAML::Value << YAML::BeginMap;
+    //     yaml_out << YAML::Key << "x";
+    //     yaml_out << YAML::Value << vecPath[i].first;
+    //     yaml_out << YAML::Key << "y";
+    //     yaml_out << YAML::Value << vecPath[i].second;
+    //     yaml_out << YAML::Key << "z";
+    //     yaml_out << YAML::Value << "4.5";
+    //     yaml_out << YAML::EndMap;
+    //     yaml_out << YAML::Key << "orientation";
+    //     yaml_out << YAML::Value << YAML::BeginMap;
+    //     yaml_out << YAML::Key << "x";
+    //     yaml_out << YAML::Value << "0.0444210774910485";
+    //     yaml_out << YAML::Key << "y";
+    //     yaml_out << YAML::Value << "-0.03997364552703113";
+    //     yaml_out << YAML::Key << "z";
+    //     yaml_out << YAML::Value << "0.7459565426241741";
+    //     yaml_out << YAML::Key << "w";
+    //     yaml_out << YAML::Value << "0.66330815768691";
+    //     yaml_out << YAML::EndMap;
+    //     yaml_out << YAML::EndMap;
+    // }                   
+    // yaml_out << YAML::EndSeq;
+    // yaml_out << YAML::EndMap;
+    // cout << "Here's the output YAML:\n" << yaml_out.c_str();
     
-    cout << endl;
+    // cout << endl;
 
-    ofstream inFile;
-    inFile.open("../config/yamlman7data.yaml");
-    inFile << yaml_out.c_str();
+    // ofstream inFile;
+    // inFile.open("../config/yamlman7data.yaml");
+    // inFile << yaml_out.c_str();
 
-    inFile.close();
+    // inFile.close();
     return 0;
 }

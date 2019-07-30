@@ -23,7 +23,7 @@ int main ( int argc, char** argv )
     ifstream inFile;
     ofstream outFile;
     string strFileName = "num2.txt";
-    string strOutFile = "downsample3.txt";
+    string strOutFile = "downsample7.txt";
     int r = 366, c = 362;
     float V[r*c];
     
@@ -58,7 +58,7 @@ int main ( int argc, char** argv )
     ddepth = -1;
     
     // Update kernel size for a normalized box filter
-    kernel_size = 3;
+    kernel_size = 7;
     kernel = Mat::ones( kernel_size, kernel_size, CV_32FC1 )/ (float)(kernel_size*kernel_size);
     // Apply filter
     cv::filter2D(M, dst, ddepth , kernel, anchor, delta, BORDER_DEFAULT );
@@ -83,7 +83,7 @@ int main ( int argc, char** argv )
     int dr = ceil(float(M.rows)/kernel_size);
     int dc = ceil(float(M.cols)/kernel_size);
     
-
+    cout << dr << " " << dc << endl;
     Mat downsample(dr,dc,CV_32FC1);;
     Mat intdownsample;
     
@@ -120,7 +120,8 @@ int main ( int argc, char** argv )
     // }
 
 
-    imshow("downscaled",intdownsample);
+    imshow("downscaled7",intdownsample);
+    imwrite("downscaled5.jpg",intdownsample);
     writeFile(strOutFile,downsample,outFile);
     waitKey(0);
 
