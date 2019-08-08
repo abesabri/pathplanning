@@ -87,27 +87,27 @@ bool isDestination(int row, int col, Pair dest)
 }
 
 // // A Utility Function to calculate the 'h' heuristics.
-double calculateHValue(int row, int col, Pair src, Pair dest)
-{
-    double dx1,dy1,dx2,dy2,cross,heuristic = 0;
-    if(map1[row][col] == 3) {
-        heuristic = 1000;
-        return heuristic;
-    }
-    dx1 = row - dest.first;
-    dy1 = col - dest.second;
-    dx2 = src.first - dest.first;
-    dy2 = src.second - dest.second;
-    cross = dx1*dy2 - dx2*dy1;
-    heuristic += cross*0.001;
-    return heuristic;
-    // Return using the distance formula
-    //return ((double)sqrt((row - dest.first) * (row - dest.first) + (col - dest.second) * (col - dest.second)));
-}
+// double calculateHValue(int row, int col, Pair src, Pair dest)
+// {
+//     double dx1,dy1,dx2,dy2,cross,heuristic = 0;
+//     if(map1[row][col] == 20) {
+//         heuristic = 1000;
+//         return heuristic;
+//     }
+//     dx1 = row - dest.first;
+//     dy1 = col - dest.second;
+//     dx2 = src.first - dest.first;
+//     dy2 = src.second - dest.second;
+//     cross = dx1*dy2 - dx2*dy1;
+//     heuristic += cross*0.001;
+//     return heuristic;
+//     // Return using the distance formula
+//     //return ((double)sqrt((row - dest.first) * (row - dest.first) + (col - dest.second) * (col - dest.second)));
+// }
 
 // double calculateHValue(int row, int col, Pair src,Pair dest){ //MANHATTAN
 //     double heuristic;
-//     if(map1[row][col] == 3) {
+//     if(map1[row][col] == 20) {
 //         heuristic = 1000;
 //         return heuristic;
 //     }
@@ -120,20 +120,20 @@ double calculateHValue(int row, int col, Pair src, Pair dest)
 //     return heuristic;
 // }
 
-// double calculateHValue(int row, int col, Pair src, Pair dest){ //DIAGONAL
-//     double heuristic;
-//     if(map1[row][col] == 3) {
-//         heuristic = 1000;
-//         return heuristic;
-//     }
-//     int D = 1, D2 = 8*D;
-//     int dx,dy;
-//     dx = abs(row-dest.first);
-//     dy = abs(col-dest.second);
-//     //heuristic = max(abs((row - dest.first)),abs((col-dest.second)));
-//     heuristic = D*(dx+dy)+(D2-2*D)*min(dx,dy);
-//     return heuristic;
-// }
+double calculateHValue(int row, int col, Pair src, Pair dest){ //DIAGONAL
+    double heuristic;
+    if(map1[row][col] == 20) {
+        heuristic = 1000;
+        return heuristic;
+    }
+    int D = 1, D2 = 8*D;
+    int dx,dy;
+    dx = abs(row-dest.first);
+    dy = abs(col-dest.second);
+    //heuristic = max(abs((row - dest.first)),abs((col-dest.second)));
+    heuristic = D*(dx+dy)+(D2-2*D)*min(dx,dy);
+    return heuristic;
+}
 
 // A Utility Function to trace the path from the source
 // to destination
@@ -219,7 +219,7 @@ void checkNeighbours(int row, int col){
         cneigh = col;
         j = (rneigh*W)+cneigh;
         //cout << j << endl;
-        if(map1[row-1][col] == 3 || map1[row][col] == 3){
+        if(map1[row-1][col] == 20 || map1[row][col] == 20){
             graph[i][j] = 100;
             
         }
@@ -242,7 +242,7 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col;
         j = (rneigh*W)+cneigh;   
-        if(map1[row+1][col] == 3 || map1[row][col] == 3){
+        if(map1[row+1][col] == 20 || map1[row][col] == 20){
             graph[i][j] = 100;
      
         }
@@ -263,7 +263,7 @@ void checkNeighbours(int row, int col){
         cneigh = col+1; 
         rneigh = row;
         j = (rneigh*W)+cneigh;
-        if(map1[row][col+1] == 3 || map1[row][col] == 3){
+        if(map1[row][col+1] == 20 || map1[row][col] == 20){
             graph[i][j] = 100;
         }
         else if(map1[row][col+1] == -1 || map1[row][col] == -1){
@@ -281,7 +281,7 @@ void checkNeighbours(int row, int col){
         rneigh = row;
         j = (rneigh*W)+cneigh;
       
-        if(map1[row][col-1] == 3 || map1[row][col] == 3){
+        if(map1[row][col-1] == 20 || map1[row][col] == 20){
             graph[i][j] = 100;
            
         }
@@ -300,7 +300,7 @@ void checkNeighbours(int row, int col){
         cneigh = col+1; 
         j = (rneigh*W)+cneigh;
    
-        if(map1[row-1][col+1] == 3 || map1[row][col] == 3){
+        if(map1[row-1][col+1] == 20 || map1[row][col] == 20){
             graph[i][j] = 100;
         }
         else if(map1[row-1][col+1] == -1 || map1[row][col] == -1){
@@ -318,7 +318,7 @@ void checkNeighbours(int row, int col){
         rneigh = row-1;
         cneigh = col-1; 
         j = (rneigh*W)+cneigh;
-        if(map1[row-1][col-1] == 3 || map1[row][col] == 3){
+        if(map1[row-1][col-1] == 20 || map1[row][col] == 20){
             graph[i][j] = 100;
         
         }
@@ -338,7 +338,7 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col+1; 
         j = (rneigh*W)+cneigh;
-        if(map1[row+1][col+1] == 3 || map1[row][col] == 3){
+        if(map1[row+1][col+1] == 20 || map1[row][col] == 20){
             graph[i][j] = 100;
         }
         else if(map1[row+1][col+1] == -1 || map1[row][col] == -1){
@@ -355,7 +355,7 @@ void checkNeighbours(int row, int col){
         rneigh = row+1;
         cneigh = col-1; 
         j = (rneigh*W)+cneigh;
-        if(map1[row+1][col-1] == 3 || map1[row][col] == 3){
+        if(map1[row+1][col-1] == 20 || map1[row][col] == 20){
             graph[i][j] = 100;
         }
         else if(map1[row+1][col-1] == -1 || map1[row][col] == -1){

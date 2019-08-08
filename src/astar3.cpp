@@ -87,23 +87,23 @@ bool isDestination(int row, int col, Pair dest)
 }
 
 // // A Utility Function to calculate the 'h' heuristics.
-double calculateHValue(int row, int col, Pair src, Pair dest)
-{
-    double dx1,dy1,dx2,dy2,cross,heuristic = 0;
-    if(map1[row][col] == 3) {
-        heuristic = 1000;
-        return heuristic;
-    }
-    dx1 = row - dest.first;
-    dy1 = col - dest.second;
-    dx2 = src.first - dest.first;
-    dy2 = src.second - dest.second;
-    cross = dx1*dy2 - dx2*dy1;
-    heuristic += cross*0.001;
-    return heuristic;
-    // Return using the distance formula
-    //return ((double)sqrt((row - dest.first) * (row - dest.first) + (col - dest.second) * (col - dest.second)));
-}
+// double calculateHValue(int row, int col, Pair src, Pair dest)
+// {
+//     double dx1,dy1,dx2,dy2,cross,heuristic = 0;
+//     if(map1[row][col] == 3) {
+//         heuristic = 1000;
+//         return heuristic;
+//     }
+//     dx1 = row - dest.first;
+//     dy1 = col - dest.second;
+//     dx2 = src.first - dest.first;
+//     dy2 = src.second - dest.second;
+//     cross = dx1*dy2 - dx2*dy1;
+//     heuristic += cross*0.001;
+//     return heuristic;
+//     // Return using the distance formula
+//     //return ((double)sqrt((row - dest.first) * (row - dest.first) + (col - dest.second) * (col - dest.second)));
+// }
 
 // double calculateHValue(int row, int col, Pair src,Pair dest){ //MANHATTAN
 //     double heuristic;
@@ -120,21 +120,21 @@ double calculateHValue(int row, int col, Pair src, Pair dest)
 //     return heuristic;
 // }
 
-// double calculateHValue(int row, int col, Pair src, Pair dest){ //DIAGONAL
-//     double heuristic;
-//     if(map1[row][col] == 3) {
-//         heuristic = 1000;
-//         return heuristic;
-//     }
-//     int D = 1, D2 = 8*D;
-//     int dx,dy;
-//     dx = abs(row-dest.first);
-//     dy = abs(col-dest.second);
-//     //double m = max(abs((row - dest.first)),abs((col-dest.second)));
-//     //return (m);
-//     heuristic = D*(dx+dy)+(D2-2*D)*min(dx,dy);
-//     return heuristic;
-// }
+double calculateHValue(int row, int col, Pair src, Pair dest){ //DIAGONAL
+    double heuristic;
+    if(map1[row][col] == 3) {
+        heuristic = 1000;
+        return heuristic;
+    }
+    int D = 1, D2 = 8*D;
+    int dx,dy;
+    dx = abs(row-dest.first);
+    dy = abs(col-dest.second);
+    //double m = max(abs((row - dest.first)),abs((col-dest.second)));
+    //return (m);
+    heuristic = D*(dx+dy)+(D2-2*D)*min(dx,dy);
+    return heuristic;
+}
 
 // A Utility Function to trace the path from the source
 // to destination

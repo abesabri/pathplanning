@@ -15,7 +15,7 @@
 using namespace std;
 using namespace cv;
 
-#define KERNEL_SIZE 7
+#define KERNEL_SIZE 5
 #define ORIGIN_MAP 15
 
 //resolution value
@@ -326,9 +326,9 @@ void dijkstra(vector<vector<int> > &graph, int src)
 // Driver Code 
 int main() 
 { 
-    std::ifstream file("downsample7.txt");
-    H = 53;
-    W = 52;
+    std::ifstream file("downsample5.txt");
+    H = 74;
+    W = 73;
     graph = vector<vector<int> >(H*W, vector<int>(W*H, 0));
     //int mapt[H][W];
     //for(int row = 0; row < H; ++row){
